@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dij4s2b6bq7s5"]
+
+[ext_resource type="Script" uid="uid://dd5otev8ise7u" path="res://scripts/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://bph5wd52ddi87" path="res://scenes/player.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://1ad3sfmnuyho" path="res://scripts/camera_3d.gd" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://qu606wpn66dj" path="res://scenes/stats.gd" id="4_jyhfs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w1hta"]
+size = Vector3(60, 2, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_37tqn"]
+size = Vector3(60, 2, 60)
+
+[node name="Main" type="Node" unique_id=908243597]
+script = ExtResource("1_0wfyh")
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=604535786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1130334455]
+shape = SubResource("BoxShape3D_w1hta")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=936306999]
+mesh = SubResource("BoxMesh_37tqn")
+
+[node name="Player" parent="." unique_id=2141467341 instance=ExtResource("1_o5qli")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1572766049]
+transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 46, 46)
+shadow_enabled = true
+
+[node name="CameraPivot" type="Marker3D" parent="." unique_id=1159891263]
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=952919842 node_paths=PackedStringArray("following")]
+spring_length = 6.655
+script = ExtResource("3_sugp2")
+following = NodePath("../../Player")
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=403330460]
+
+[node name="UserInterface" type="Control" parent="." unique_id=1336277018]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Stats" type="Label" parent="UserInterface" unique_id=2076300868]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 85.0
+offset_bottom = 63.0
+theme_override_colors/font_color = Color(0.53333336, 0.03137255, 0.03137255, 1)
+text = "FPS: 0"
+script = ExtResource("4_jyhfs")

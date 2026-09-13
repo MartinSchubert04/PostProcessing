@@ -1,0 +1,4 @@
+# Normalize EOL for all files that Git considers text files.
+* text=auto eol=lf
+assets/models/paladin/fallen_paladin_in_corrupted_black_plate_armor.glb filter=lfs diff=lfs merge=lfs -text
+assets/models/paladin/paladin.glb filter=lfs diff=lfs merge=lfs -text

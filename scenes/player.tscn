@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bph5wd52ddi87"]
+
+[ext_resource type="Script" uid="uid://dyb71kilc4lc5" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="PackedScene" uid="uid://dbxbyb8bcuo2q" path="res://assets/models/paladin/fallen_paladin_in_corrupted_black_plate_armor.glb" id="3_qhqgy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w1hta"]
+size = Vector3(1.0099792, 2.5401, 0.40740967)
+
+[node name="Player" type="CharacterBody3D" unique_id=2141467341]
+script = ExtResource("1_g2els")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=1228405491]
+
+[node name="Character" parent="Pivot" unique_id=122381630 instance=ExtResource("3_qhqgy")]
+transform = Transform3D(-1.1802075e-07, 0, -2.7, 0, 2.7, 0, 2.7, 0, -1.1802075e-07, -0.026564777, 1.2457052, -0.095039606)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=725445836]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1731146490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.043624878, 1.2632072, 0.0074157715)
+shape = SubResource("BoxShape3D_w1hta")
