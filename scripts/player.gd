@@ -1,18 +1,23 @@
 extends CharacterBody3D
 
+signal hit
+
 @onready var armature = $Armature
 @onready var camera: Node3D = %Camera
 @onready var ani_tree = $AnimationTree
 @onready var anim_player: AnimationPlayer = $Armature/AnimationPlayer
-@onready var sword_attachment: BoneAttachment3D = %SwordAttachment
-@onready var back_attachment: BoneAttachment3D = $BackAttachment
-@onready var sword: Node3D = $BackAttachment/DragonSlayer
+@onready var hand_attachment: BoneAttachment3D = %SwordAttachment
+@onready var back_attachment: BoneAttachment3D = %BackAttachment
+@onready var sword_held: Node3D = %SwordAttachment/SwordHeld
+@onready var sword_sheathed: Node3D = %BackAttachment/SwordSheathed
+@onready var sword_collision: CollisionObject3D = %SwordAreaCollision
 
-const SPEED = 5.0
+const SPEED = 7.0
 const JUMP_VELOCITY = 7.5
 const LERP_VAL = 0.5
 
 var running: bool = false
+var combat_mode: bool = false
 var speed_boost = 0.0
 
 func _ready() -> void:
@@ -57,9 +62,16 @@ func _physics_process(delta: float) -> void:
 	
 
 func handle_sword_position():
-	if running:
-		sword_attachment.set("bone_name", "mixamorig_Spine2")
-	else: 
-		sword_attachment.set("bone_name", "mixamorig_RightHand")
-	
-	
+	sword_held.visible = combat_mode
+	sword_sheathed.visible = not combat_mode
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("combat_mode"):
+		combat_mode = not combat_mode
+		handle_sword_position()
+
+func _on_sword_area_collision_area_entered(area: Area3D) -> void:
+	if area.is_in_group("enemy"):
+		print("Enemy hit")
+		hit.emit()
+		

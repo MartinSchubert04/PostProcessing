@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://dd5otev8ise7u" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bph5wd52ddi87" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://dwl7spppi6f6v" path="res://scenes/camera.tscn" id="3_jyhfs"]
-[ext_resource type="Script" uid="uid://qu606wpn66dj" path="res://scripts/stats.gd" id="4_jyhfs"]
 [ext_resource type="FontFile" uid="uid://fp16rrlb2dm4" path="res://assets/fonts/Ticketing.ttf" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://81cttihocjqj" path="res://shaders/spatial/post_processing.gdshader" id="6_tefeu"]
+[ext_resource type="PackedScene" uid="uid://5cawf53j15qb" path="res://scenes/enemy.tscn" id="8_85g3d"]
+[ext_resource type="Script" uid="uid://dj7juvi1w3qw3" path="res://scripts/debugger.gd" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://djgaleohnrma" path="res://scenes/stage.tscn" id="10_choun"]
 
 [sub_resource type="Theme" id="Theme_0w3cq"]
@@ -19,6 +20,9 @@ size = Vector2(2, 2)
 render_priority = -128
 shader = ExtResource("6_tefeu")
 shader_parameter/dither_amount = 0.5
+
+[sub_resource type="Theme" id="Theme_tipki"]
+default_font = ExtResource("4_tbgi4")
 
 [node name="Main" type="Node" unique_id=908243597]
 script = ExtResource("1_0wfyh")
@@ -42,18 +46,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = SubResource("Theme_0w3cq")
 
-[node name="Stats" type="Label" parent="UserInterface" unique_id=2076300868 node_paths=PackedStringArray("player")]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 40.0
-offset_right = 85.0
-offset_bottom = 63.0
-theme_override_colors/font_color = Color(0.53333336, 0.03137255, 0.03137255, 1)
-theme_override_font_sizes/font_size = 24
-text = "FPS: 0"
-script = ExtResource("4_jyhfs")
-player = NodePath("../../Player")
-
 [node name="ScreenQuad" type="MeshInstance3D" parent="." unique_id=629161901]
 layers = 2
 extra_cull_margin = 16384.0
@@ -61,3 +53,36 @@ mesh = SubResource("QuadMesh_w1hta")
 surface_material_override/0 = SubResource("ShaderMaterial_37tqn")
 
 [node name="Stage" parent="." unique_id=704108207 instance=ExtResource("10_choun")]
+
+[node name="Debugger" type="CanvasLayer" parent="." unique_id=568890487]
+script = ExtResource("8_tipki")
+
+[node name="PanelContainer" type="PanelContainer" parent="Debugger" unique_id=1506820044]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 353.0
+offset_bottom = 150.0
+theme = SubResource("Theme_tipki")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Debugger/PanelContainer" unique_id=2077034032]
+layout_mode = 2
+
+[node name="PlayerData" type="Label" parent="Debugger/PanelContainer/VBoxContainer" unique_id=1877091743]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5570056, 0, 0.07869997, 1)
+text = "Player  X: Y: Z:
+"
+
+[node name="Performance" type="Label" parent="Debugger/PanelContainer/VBoxContainer" unique_id=13553158]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5570056, 0, 0.07869997, 1)
+text = "Draw calls:
+Vertices/Primitives:
+Objetos en frame:
+Nodos:
+Memoria (MB):"
+
+[node name="Enemy" parent="." unique_id=708765206 instance=ExtResource("8_85g3d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+
+[connection signal="hit" from="Player" to="Enemy" method="_on_player_hit"]
