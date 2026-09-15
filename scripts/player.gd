@@ -1,38 +1,65 @@
 extends CharacterBody3D
 
+@onready var armature = $Armature
+@onready var camera: Node3D = %Camera
+@onready var ani_tree = $AnimationTree
+@onready var anim_player: AnimationPlayer = $Armature/AnimationPlayer
+@onready var sword_attachment: BoneAttachment3D = %SwordAttachment
+@onready var back_attachment: BoneAttachment3D = $BackAttachment
+@onready var sword: Node3D = $BackAttachment/DragonSlayer
 
 const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
+const JUMP_VELOCITY = 7.5
+const LERP_VAL = 0.5
 
-var camera: Node3D
+var running: bool = false
+var speed_boost = 0.0
 
 func _ready() -> void:
-	camera = %Camera
+	ani_tree.active = true
 	camera.set_following(self)
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
-		velocity += (Vector3(0,-10,0) + get_gravity()) * delta
+		velocity += get_gravity() * delta
 
 	# Handle jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+	if Input.is_action_pressed("run"):
+		speed_boost = 10
+	else:
+		speed_boost = 0.0
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	var direction = input_dir.rotated(-camera.rotation.y)
+	var direction := Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
+
 	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.y * SPEED
+		velocity.x = lerp(velocity.x, direction.x * (SPEED + speed_boost), LERP_VAL)
+		velocity.z = lerp(velocity.z, direction.z * (SPEED + speed_boost), LERP_VAL)
+		armature.rotation.y = lerp_angle(armature.rotation.y, atan2(-velocity.x, -velocity.z) + PI, LERP_VAL)
+		running = true
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.x = lerp(velocity.x, 0.0, LERP_VAL)
+		velocity.z = lerp(velocity.z, 0.0, LERP_VAL)
+		running = false
 	
-	if camera.spring_length > 3:
-		rotation.y = camera.rotation.y + PI
+	if !velocity.y or (velocity.y and velocity.x != 0 and velocity.z != 0):
+		ani_tree.set("parameters/BlendSpace1D/blend_position", velocity.length() / SPEED)
+		
+	handle_sword_position()
 	
 	move_and_slide()
+	
+
+func handle_sword_position():
+	if running:
+		sword_attachment.set("bone_name", "mixamorig_Spine2")
+	else: 
+		sword_attachment.set("bone_name", "mixamorig_RightHand")
+	
+	

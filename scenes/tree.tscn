@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://d4fwsrlqs82nm"]
+
+[ext_resource type="PackedScene" uid="uid://bn2j5cr0rpooa" path="res://assets/models/stage/tree/tree_mesh.tscn" id="1_avsvi"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_w1hta"]
+height = 0.9951172
+radius = 0.06640625
+
+[node name="Tree" type="Node3D" unique_id=180396149]
+
+[node name="Model" parent="." unique_id=427581207 instance=ExtResource("1_avsvi")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Model/Sketchfab_model/4ae49a7eb2b34ec88b7dd664e89d6dd8_fbx/RootNode/Tree_001/Tree" parent_id_path=PackedInt32Array(427581207, 1622754171) index="0" unique_id=1315926124]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Model/Sketchfab_model/4ae49a7eb2b34ec88b7dd664e89d6dd8_fbx/RootNode/Tree_001/Tree/StaticBody3D" unique_id=1606603030]
+transform = Transform3D(1, 0, 0, 0, -4.3711395e-08, -0.99999994, 0, 0.99999994, -4.3711395e-08, 0, -2.1962435e-08, 0.5024414)
+shape = SubResource("CylinderShape3D_w1hta")
+
+[editable path="Model"]

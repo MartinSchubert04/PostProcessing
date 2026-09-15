@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://bph5wd52ddi87"]
+
+[ext_resource type="Script" uid="uid://dyb71kilc4lc5" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="PackedScene" uid="uid://11efm0rf6v8j" path="res://assets/models/artorias/knight_artorias_and_great_grey_wolf_sif.glb" id="2_dqkch"]
+[ext_resource type="PackedScene" uid="uid://v7drccc4lysv" path="res://assets/models/knight/the_forgotten_knight.glb" id="3_dqkch"]
+[ext_resource type="PackedScene" uid="uid://dbxbyb8bcuo2q" path="res://assets/models/paladin/fallen_paladin_in_corrupted_black_plate_armor.glb" id="3_qhqgy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w1hta"]
+size = Vector3(1.0099792, 2.5401, 0.40740967)
+
+[node name="Player" type="CharacterBody3D" unique_id=2141467341]
+script = ExtResource("1_g2els")
+
+[node name="Armature" type="Node3D" parent="." unique_id=1228405491]
+
+[node name="artorias" parent="Armature" unique_id=756772250 instance=ExtResource("2_dqkch")]
+transform = Transform3D(-1.1, 0, -9.616505e-08, 0, 1.1, 0, 9.616505e-08, 0, -1.1, -0.052212417, 0, -0.027439296)
+
+[node name="Sif" parent="Armature/artorias/Sketchfab_model/Artorias_fbx/RootNode" parent_id_path=PackedInt32Array(756772250, 20276838) index="1" unique_id=493050367]
+visible = false
+
+[node name="Character" parent="Armature" unique_id=122381630 instance=ExtResource("3_qhqgy")]
+transform = Transform3D(-1.1802075e-07, 0, -2.7, 0, 2.7, 0, 2.7, 0, -1.1802075e-07, -0.026564777, 1.2457052, -0.095039606)
+visible = false
+
+[node name="Sketchfab_Scene" parent="Armature" unique_id=315274071 instance=ExtResource("3_dqkch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6662698, 0, 0)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1731146490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.043624878, 1.2632072, 0.0074157715)
+shape = SubResource("BoxShape3D_w1hta")
+
+[editable path="Armature/artorias"]
+[editable path="Armature/Sketchfab_Scene"]

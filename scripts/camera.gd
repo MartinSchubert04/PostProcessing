@@ -1,11 +1,11 @@
 extends SpringArm3D
 
-@export var height_offset = 2
+@export var height_offset = 1.2
 @export_range(0.0, 1.0) var mouse_sensitivity = 0.01
 @export_range(0.0, 90.0) var tilt_limit = 70.0
 @export_range(0.0, 1.0) var damping = 0.1
 
-var following = Node3D
+var following: Node3D
 var x_target = 0.0
 var y_target = 0.0
 var zoom_min = 1.5
@@ -13,14 +13,15 @@ var zoom_max = 20
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print(height_offset)
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	global_position = following.global_position + Vector3(0, height_offset, 0)
 	
-	rotation.x = lerp_angle(rotation.x, x_target, 0.01)
-	rotation.y = lerp_angle(rotation.y, y_target, 0.01)
+	rotation.x = lerp_angle(rotation.x, x_target, damping)
+	rotation.y = lerp_angle(rotation.y, y_target, damping)
 
 	var tilt_radians = deg_to_rad(tilt_limit)
 	rotation.x = clamp(rotation.x, -tilt_radians, tilt_radians)

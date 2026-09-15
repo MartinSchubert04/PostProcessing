@@ -5,13 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://dwl7spppi6f6v" path="res://scenes/camera.tscn" id="3_jyhfs"]
 [ext_resource type="Script" uid="uid://qu606wpn66dj" path="res://scripts/stats.gd" id="4_jyhfs"]
 [ext_resource type="FontFile" uid="uid://fp16rrlb2dm4" path="res://assets/fonts/Ticketing.ttf" id="4_tbgi4"]
-[ext_resource type="Shader" uid="uid://81cttihocjqj" path="res://spatial/post_processing.gdshader" id="6_tefeu"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_w1hta"]
-size = Vector3(20, 2, 20)
-
-[sub_resource type="BoxMesh" id="BoxMesh_37tqn"]
-size = Vector3(20, 2, 20)
+[ext_resource type="Shader" uid="uid://81cttihocjqj" path="res://shaders/spatial/post_processing.gdshader" id="6_tefeu"]
+[ext_resource type="PackedScene" uid="uid://djgaleohnrma" path="res://scenes/stage.tscn" id="10_choun"]
 
 [sub_resource type="Theme" id="Theme_0w3cq"]
 default_font = ExtResource("4_tbgi4")
@@ -21,25 +16,17 @@ flip_faces = true
 size = Vector2(2, 2)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_37tqn"]
-render_priority = 0
+render_priority = -128
 shader = ExtResource("6_tefeu")
 shader_parameter/dither_amount = 0.5
 
 [node name="Main" type="Node" unique_id=908243597]
 script = ExtResource("1_0wfyh")
 
-[node name="Stage" type="Node" parent="." unique_id=779013251]
-
-[node name="Ground" type="StaticBody3D" parent="." unique_id=604535786]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=1130334455]
-shape = SubResource("BoxShape3D_w1hta")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=936306999]
-mesh = SubResource("BoxMesh_37tqn")
-
 [node name="Player" parent="." unique_id=2141467341 instance=ExtResource("1_o5qli")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09930718, -7)
+collision_mask = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1572766049]
 transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 46, 46)
@@ -68,6 +55,9 @@ script = ExtResource("4_jyhfs")
 player = NodePath("../../Player")
 
 [node name="ScreenQuad" type="MeshInstance3D" parent="." unique_id=629161901]
+layers = 2
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_w1hta")
 surface_material_override/0 = SubResource("ShaderMaterial_37tqn")
+
+[node name="Stage" parent="." unique_id=704108207 instance=ExtResource("10_choun")]
