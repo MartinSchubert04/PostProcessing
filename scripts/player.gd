@@ -36,7 +36,7 @@ var jump_val = 0
 var walk_val = 0
 
 func _ready() -> void:
-	handle_sword_position()
+	sword_held.visible = combat_mode
 	ani_tree.active = true
 	camera.set_following(self)
 
@@ -50,7 +50,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		currentAnim = JUMP
-	elif Input.is_action_pressed("player_run"):
+	elif Input.is_action_pressed("player_run") and is_moving():
 		currentAnim = RUN
 	elif is_moving():
 		currentAnim = WALK
@@ -79,14 +79,10 @@ func _physics_process(delta: float) -> void:
 
 ### SWORD ############################################
 
-func handle_sword_position():
-	sword_held.visible = combat_mode
-	sword_sheathed.visible = not combat_mode
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("combat_mode"):
 		combat_mode = not combat_mode
-		handle_sword_position()
 	if event.is_action_pressed("player_run"):
 		current_speed = run_speed
 	if event.is_action_released("player_run"):
@@ -150,3 +146,12 @@ func update_ani_tree():
 
 func is_moving():
 	return Input.is_action_pressed("move_forward") or Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("move_back")
+
+
+func _on_animation_tree_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "great_sword/draw_1" and combat_mode:
+		sword_held.visible = true
+		sword_sheathed.visible = false
+	if anim_name == "great_sword/draw_2" and !combat_mode:
+		sword_sheathed.visible = true
+		sword_held.visible = false

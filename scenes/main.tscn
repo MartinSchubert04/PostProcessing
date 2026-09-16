@@ -7,7 +7,22 @@
 [ext_resource type="Shader" uid="uid://81cttihocjqj" path="res://shaders/spatial/post_processing.gdshader" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://5cawf53j15qb" path="res://scenes/enemy.tscn" id="8_85g3d"]
 [ext_resource type="Script" uid="uid://dj7juvi1w3qw3" path="res://scripts/debugger.gd" id="8_tipki"]
+[ext_resource type="PackedScene" uid="uid://dex452k0col2b" path="res://scenes/particles.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://djgaleohnrma" path="res://scenes/stage.tscn" id="10_choun"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_choun"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ya4ey"]
+sky_material = SubResource("ProceduralSkyMaterial_choun")
+
+[sub_resource type="Environment" id="Environment_eb6dy"]
+background_mode = 2
+sky = SubResource("Sky_ya4ey")
+glow_enabled = true
+fog_enabled = true
+fog_density = 0.035
 
 [sub_resource type="Theme" id="Theme_0w3cq"]
 default_font = ExtResource("4_tbgi4")
@@ -27,6 +42,9 @@ default_font = ExtResource("4_tbgi4")
 [node name="Main" type="Node" unique_id=908243597]
 script = ExtResource("1_0wfyh")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=665216121]
+environment = SubResource("Environment_eb6dy")
+
 [node name="Player" parent="." unique_id=2141467341 instance=ExtResource("1_o5qli")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09930718, -7)
@@ -38,6 +56,9 @@ shadow_enabled = true
 
 [node name="Camera" parent="." unique_id=1353829421 instance=ExtResource("3_jyhfs")]
 unique_name_in_owner = true
+
+[node name="Rain" parent="Camera" unique_id=1600726263 instance=ExtResource("9_85g3d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
 
 [node name="UserInterface" type="Control" parent="." unique_id=1336277018]
 layout_mode = 3
@@ -86,3 +107,5 @@ Memoria (MB):"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
 
 [connection signal="hit" from="Player" to="Enemy" method="_on_player_hit"]
+
+[editable path="Camera/Rain"]
