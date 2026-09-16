@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c56hefwc01x8d"
-path="res://.godot/imported/Fast Run.fbx-6353be6627ca9d3ec984c75eea3b91ce.scn"
+uid="uid://hhvh3gfcr7k7"
+path="res://.godot/imported/Walking.fbx-b206a449028355301ca31fc1bfe2af81.scn"
 
 [deps]
 
-source_file="res://assets/animatios/Fast Run.fbx"
-dest_files=["res://.godot/imported/Fast Run.fbx-6353be6627ca9d3ec984c75eea3b91ce.scn"]
+source_file="res://assets/animatios/move/walk/Walking.fbx"
+dest_files=["res://.godot/imported/Walking.fbx-b206a449028355301ca31fc1bfe2af81.scn"]
 
 [params]
 
@@ -43,10 +43,10 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://assets/animatios/fast_run.res",
+"save_to_file/fallback_path": "res://assets/animatios/move/walk/walk.res",
 "save_to_file/keep_custom_tracks": "",
-"save_to_file/path": "uid://3bkv5vdfn4rd",
-"settings/loop_mode": 0,
+"save_to_file/path": "uid://b1h2wsigyi7wq",
+"settings/loop_mode": 1,
 "slice_1/end_frame": 0,
 "slice_1/loop_mode": 0,
 "slice_1/name": "",

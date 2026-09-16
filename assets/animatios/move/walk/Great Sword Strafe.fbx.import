@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cv77np7t8vgvq"
-path="res://.godot/imported/Running.fbx-e42936b54e9e8efc95637d38bc5b9c1f.scn"
+uid="uid://3eeynkn6ywoj"
+path="res://.godot/imported/Great Sword Strafe.fbx-44ab8c104e319e688a383345b60647a8.scn"
 
 [deps]
 
-source_file="res://assets/animatios/Running.fbx"
-dest_files=["res://.godot/imported/Running.fbx-e42936b54e9e8efc95637d38bc5b9c1f.scn"]
+source_file="res://assets/animatios/move/walk/Great Sword Strafe.fbx"
+dest_files=["res://.godot/imported/Great Sword Strafe.fbx-44ab8c104e319e688a383345b60647a8.scn"]
 
 [params]
 
@@ -43,10 +43,10 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://assets/animatios/run.res",
+"save_to_file/fallback_path": "res://assets/animatios/move/walk/walk_great_sword_strafe.res",
 "save_to_file/keep_custom_tracks": "",
-"save_to_file/path": "uid://bqglojfnfkrpe",
-"settings/loop_mode": 0,
+"save_to_file/path": "uid://brf2cxvnb1aox",
+"settings/loop_mode": 1,
 "slice_1/end_frame": 0,
 "slice_1/loop_mode": 0,
 "slice_1/name": "",

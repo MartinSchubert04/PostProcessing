@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 @onready var ani_tree: AnimationTree = $AnimationTree
-const SPEED = 5.0
+const SPEED = 2.0
 
 var player_in_range = false
 var target: CharacterBody3D
@@ -34,7 +34,6 @@ func die():
 	queue_free()
 
 func _on_ray_cast_area_body_entered(body: Node3D) -> void:
-	print("body entered: ", body.name, " grupos: ", body.get_groups())
 	if body.is_in_group("player"):
 		target = body
 		player_in_range = true
