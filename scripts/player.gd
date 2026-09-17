@@ -4,25 +4,21 @@ signal hit
 
 @onready var armature = $Armature
 @onready var camera: Node3D = %Camera
-@onready var ani_tree = $AnimationTree
-@onready var anim_player: AnimationPlayer = $Armature/AnimationPlayer
+@onready var anim_tree = $AnimationTree
 @onready var hand_attachment: BoneAttachment3D = %SwordAttachment
 @onready var back_attachment: BoneAttachment3D = %BackAttachment
 @onready var sword_held: Node3D = %SwordAttachment/SwordHeld
 @onready var sword_sheathed: Node3D = %BackAttachment/SwordSheathed
 @onready var sword_collision: CollisionObject3D = %SwordAreaCollision
 @onready var IK_controller: Node3D = %IKController
+@onready var state_machine: StateMachine = $StateMachine
 
-
-var run_speed = 7.0
-var walk_speed = 3.0
-var current_speed = walk_speed
-const JUMP_VELOCITY = 7.5
-const LERP_VAL = 0.5
 var direction: Vector3
+var input_dir: Vector2
+var speed: float
+var lerp_val: float
 
 var combat_mode: bool = false
-var speed_boost = 0.0
 
 var enemies_in_range: Array[Node3D] = []
 var fov_half_angle_degrees = 90.0
@@ -37,7 +33,8 @@ var walk_val = 0
 
 func _ready() -> void:
 	sword_held.visible = combat_mode
-	ani_tree.active = true
+	state_machine.start()
+	anim_tree.active = true
 	camera.set_following(self)
 
 
@@ -45,34 +42,18 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-		currentAnim = JUMP
-	elif Input.is_action_pressed("player_run") and is_moving():
-		currentAnim = RUN
-	elif is_moving():
-		currentAnim = WALK
-	else:
-		currentAnim = IDLE
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	
-	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	direction = Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
 
 	if direction:
-		velocity.x = lerp(velocity.x, direction.x * current_speed, LERP_VAL)
-		velocity.z = lerp(velocity.z, direction.z * current_speed, LERP_VAL)
-		armature.rotation.y = lerp_angle(armature.rotation.y, atan2(-velocity.x, -velocity.z) + PI, LERP_VAL)
+		velocity.x = lerp(velocity.x, direction.x * speed, lerp_val)
+		velocity.z = lerp(velocity.z, direction.z * speed, lerp_val)
+		armature.rotation.y = lerp_angle(armature.rotation.y, atan2(-velocity.x, -velocity.z) + PI, lerp_val)
 	else:
-		velocity.x = lerp(velocity.x, 0.0, LERP_VAL)
-		velocity.z = lerp(velocity.z, 0.0, LERP_VAL)
-	
-	handle_animations(delta)
-	update_ani_tree()
+		velocity.x = lerp(velocity.x, 0.0, lerp_val)
+		velocity.z = lerp(velocity.z, 0.0, lerp_val)
+
 	_update_look_at_target()
 	move_and_slide()
 	
@@ -83,11 +64,6 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("combat_mode"):
 		combat_mode = not combat_mode
-	if event.is_action_pressed("player_run"):
-		current_speed = run_speed
-	if event.is_action_released("player_run"):
-		current_speed = walk_speed
-
 
 func _on_sword_area_collision_area_entered(area: Area3D) -> void:
 	if area.is_in_group("enemy"):
@@ -119,39 +95,3 @@ func _update_look_at_target():
 		IK_controller.set_look_at(best_target)
 	elif not best_target and IK_controller.look_target != null:
 		IK_controller.disable_look_at()
-
-func handle_animations(delta):
-	match currentAnim:
-		IDLE:
-			reset_animation_vals(delta)
-		WALK:
-			reset_animation_vals(delta)
-			walk_val = lerpf(walk_val, 1, blend_speed * delta)
-		RUN:
-			reset_animation_vals(delta)
-			run_val = lerpf(run_val, 1, blend_speed * delta)
-		JUMP:
-			reset_animation_vals(delta)
-			jump_val = lerpf(jump_val, 1, blend_speed * delta)
-
-func reset_animation_vals(delta):
-	run_val = lerpf(run_val, 0, blend_speed * delta)
-	walk_val = lerpf(walk_val, 0, blend_speed * delta)
-	jump_val = lerpf(jump_val, 0, blend_speed * delta)
-
-func update_ani_tree():
-	ani_tree["parameters/walk/blend_amount"] = walk_val
-	ani_tree["parameters/run/blend_amount"] = run_val
-	ani_tree["parameters/walk/blend_amount"] = walk_val
-
-func is_moving():
-	return Input.is_action_pressed("move_forward") or Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right") or Input.is_action_pressed("move_back")
-
-
-func _on_animation_tree_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "great_sword/draw_1" and combat_mode:
-		sword_held.visible = true
-		sword_sheathed.visible = false
-	if anim_name == "great_sword/draw_2" and !combat_mode:
-		sword_sheathed.visible = true
-		sword_held.visible = false

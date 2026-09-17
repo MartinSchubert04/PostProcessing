@@ -4,12 +4,11 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://d0v2107r0axjw"
-path="res://.godot/imported/paladin.glb-c3a68bda2443b0be1bb72a13b7c6bd0c.scn"
+valid=false
 
 [deps]
 
 source_file="res://assets/models/paladin/paladin.glb"
-dest_files=["res://.godot/imported/paladin.glb-c3a68bda2443b0be1bb72a13b7c6bd0c.scn"]
 
 [params]
 

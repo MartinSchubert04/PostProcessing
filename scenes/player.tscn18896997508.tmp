@@ -1,0 +1,388 @@
+[gd_scene format=3 uid="uid://bph5wd52ddi87"]
+
+[ext_resource type="Script" uid="uid://dyb71kilc4lc5" path="res://scripts/player.gd" id="1_g2els"]
+[ext_resource type="Script" uid="uid://076wlsciwt07" path="res://scripts/state_machine.gd" id="2_u2ulf"]
+[ext_resource type="Script" uid="uid://cmt087pqdbk7j" path="res://scripts/idle_state.gd" id="3_6e8lb"]
+[ext_resource type="Animation" uid="uid://decv4k27dfd0o" path="res://assets/animatios/idle.res" id="3_dqkch"]
+[ext_resource type="Script" uid="uid://ctabtxcdur6pn" path="res://scripts/run_state.gd" id="3_u2ulf"]
+[ext_resource type="Animation" uid="uid://bdx1cmkkw7yp5" path="res://assets/animatios/great_sword/death.res" id="5_2gdjj"]
+[ext_resource type="Animation" uid="uid://b55eyqp4u27j0" path="res://assets/animatios/run.res" id="5_smehm"]
+[ext_resource type="Animation" uid="uid://bvyq57uq603oc" path="res://assets/animatios/fast_run.res" id="5_ur7pv"]
+[ext_resource type="PackedScene" uid="uid://ofi8x5eomc0j" path="res://scenes/armature.tscn" id="6_u2ulf"]
+[ext_resource type="Script" uid="uid://wrjewv5ye6nm" path="res://scripts/IKController.gd" id="7_ur7pv"]
+[ext_resource type="Animation" uid="uid://cux3rnil1dkf" path="res://assets/animatios/great_sword/run_back.res" id="9_sc3ue"]
+[ext_resource type="Animation" uid="uid://di1r8c2q3dlok" path="res://assets/animatios/t-pose.res" id="9_ur7pv"]
+[ext_resource type="Animation" uid="uid://ctvbx27noipac" path="res://assets/animatios/great_sword/run_forward.res" id="10_lxlsd"]
+[ext_resource type="Animation" uid="uid://br77jtpbd3p2f" path="res://assets/animatios/great_sword/spell_cast.res" id="11_ha2mi"]
+[ext_resource type="Animation" uid="uid://b1h2wsigyi7wq" path="res://assets/animatios/move/walk/walk.res" id="13_apa73"]
+[ext_resource type="Animation" uid="uid://cq0lx0tk8jh30" path="res://assets/animatios/great_sword/walk_back.res" id="14_74r1k"]
+[ext_resource type="Animation" uid="uid://c02amkn54348v" path="res://assets/animatios/great_sword/180_turn_2.res" id="19_au7lq"]
+[ext_resource type="Animation" uid="uid://cv50gh88xpdj2" path="res://assets/animatios/great_sword/attack.res" id="20_nubpm"]
+[ext_resource type="Animation" uid="uid://cfme8qmab82dd" path="res://assets/animatios/great_sword/blocking.res" id="21_ua5cf"]
+[ext_resource type="Animation" uid="uid://bxvhnoche5be" path="res://assets/animatios/great_sword/blocking_2.res" id="22_51ujp"]
+[ext_resource type="Animation" uid="uid://dcxjsj57mwypp" path="res://assets/animatios/great_sword/blocking_3.res" id="23_tk41t"]
+[ext_resource type="Animation" uid="uid://bppilcdtqr00w" path="res://assets/animatios/great_sword/casting.res" id="24_fuw3a"]
+[ext_resource type="Animation" uid="uid://djipghisoiy8p" path="res://assets/animatios/great_sword/crouching_3.res" id="25_8txt3"]
+[ext_resource type="Animation" uid="uid://il7wecbfyko2" path="res://assets/animatios/great_sword/crouching_4.res" id="26_2w11d"]
+[ext_resource type="Animation" uid="uid://dkfxfqnimepjw" path="res://assets/animatios/great_sword/crouching_5.res" id="27_770dr"]
+[ext_resource type="Animation" uid="uid://boguyr80j5gup" path="res://assets/animatios/great_sword/crouching_6.res" id="28_8f1cb"]
+[ext_resource type="Animation" uid="uid://biu7b26qx04ca" path="res://assets/animatios/great_sword/crouching_down.res" id="29_vdulj"]
+[ext_resource type="Animation" uid="uid://bn80y68yogwi2" path="res://assets/animatios/great_sword/crouching_up.res" id="30_vau08"]
+[ext_resource type="Animation" uid="uid://bxsavfgeq7t14" path="res://assets/animatios/great_sword/death_2.res" id="31_qsb7e"]
+[ext_resource type="Animation" uid="uid://csqb5y4biy6eo" path="res://assets/animatios/great_sword/draw_sheathe.res" id="32_qjsmb"]
+[ext_resource type="Animation" uid="uid://liw07kypk3lq" path="res://assets/animatios/great_sword/draw_unsheathe.res" id="33_mwp2n"]
+[ext_resource type="Animation" uid="uid://cqhhskpmxl3xt" path="res://assets/animatios/great_sword/high_spin_attack.res" id="34_0yhus"]
+[ext_resource type="Animation" uid="uid://bg6g63cubxo7n" path="res://assets/animatios/great_sword/idle.res" id="35_jlll7"]
+[ext_resource type="Animation" uid="uid://b0617b4edw37y" path="res://assets/animatios/great_sword/idle_2.res" id="36_qk6i7"]
+[ext_resource type="Animation" uid="uid://d7on4ulroe50" path="res://assets/animatios/great_sword/idle_3.res" id="37_6c3st"]
+[ext_resource type="Animation" uid="uid://noht3f03ldtb" path="res://assets/animatios/great_sword/idle_4.res" id="38_1da1t"]
+[ext_resource type="Animation" uid="uid://dy0fwuw0lpevd" path="res://assets/animatios/great_sword/idle_5.res" id="39_p21yu"]
+[ext_resource type="Animation" uid="uid://cv4qdec77v7q" path="res://assets/animatios/great_sword/slash.res" id="40_irpag"]
+[ext_resource type="Animation" uid="uid://coexe21dikufj" path="res://assets/animatios/great_sword/slash_2.res" id="41_bpsgo"]
+[ext_resource type="Animation" uid="uid://cucl2d27nu8hj" path="res://assets/animatios/great_sword/slash_3.res" id="42_jx8is"]
+[ext_resource type="Animation" uid="uid://ch35kqb2bvsj6" path="res://assets/animatios/great_sword/slash_4.res" id="43_vx63k"]
+[ext_resource type="Animation" uid="uid://c2kmxapjtvsf3" path="res://assets/animatios/great_sword/slash_5.res" id="44_lw0jh"]
+[ext_resource type="Animation" uid="uid://brrf6fjcwv324" path="res://assets/animatios/great_sword/strafe_left.res" id="45_ry8ed"]
+[ext_resource type="Animation" uid="uid://0upjowbrhq22" path="res://assets/animatios/great_sword/strafe_left_fast.res" id="46_au8ao"]
+[ext_resource type="Animation" uid="uid://cfjej0u1vu8o2" path="res://assets/animatios/great_sword/strafe_right.res" id="47_w5j5w"]
+[ext_resource type="Animation" uid="uid://bmo2u3o227lql" path="res://assets/animatios/great_sword/strafe_right_fast.res" id="48_cbf1i"]
+[ext_resource type="Animation" uid="uid://cypie8ypb0bfk" path="res://assets/animatios/great_sword/turn.res" id="49_4vfid"]
+[ext_resource type="Animation" uid="uid://cmfobgn7mc4pf" path="res://assets/animatios/great_sword/turn_2.res" id="50_ljgr3"]
+[ext_resource type="Animation" uid="uid://chklo84gy6iff" path="res://assets/animatios/great_sword/walk_forward.res" id="51_fr8ja"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tuyoq"]
+_data = {
+&"fast_run": ExtResource("5_ur7pv"),
+&"idle": ExtResource("3_dqkch"),
+&"run": ExtResource("5_smehm"),
+&"t-pose": ExtResource("9_ur7pv"),
+&"walk": ExtResource("13_apa73")
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qmsq4"]
+_data = {
+&"180_turn_2": ExtResource("19_au7lq"),
+&"attack": ExtResource("20_nubpm"),
+&"blocking": ExtResource("21_ua5cf"),
+&"blocking_2": ExtResource("22_51ujp"),
+&"blocking_3": ExtResource("23_tk41t"),
+&"casting": ExtResource("24_fuw3a"),
+&"crouching_3": ExtResource("25_8txt3"),
+&"crouching_4": ExtResource("26_2w11d"),
+&"crouching_5": ExtResource("27_770dr"),
+&"crouching_6": ExtResource("28_8f1cb"),
+&"crouching_down": ExtResource("29_vdulj"),
+&"crouching_up": ExtResource("30_vau08"),
+&"death": ExtResource("5_2gdjj"),
+&"death_2": ExtResource("31_qsb7e"),
+&"draw_1": ExtResource("32_qjsmb"),
+&"draw_2": ExtResource("33_mwp2n"),
+&"high_spin_attack": ExtResource("34_0yhus"),
+&"idle": ExtResource("35_jlll7"),
+&"idle_2": ExtResource("36_qk6i7"),
+&"idle_3": ExtResource("37_6c3st"),
+&"idle_4": ExtResource("38_1da1t"),
+&"idle_5": ExtResource("39_p21yu"),
+&"run_back": ExtResource("9_sc3ue"),
+&"run_forward": ExtResource("10_lxlsd"),
+&"slash": ExtResource("40_irpag"),
+&"slash_2": ExtResource("41_bpsgo"),
+&"slash_3": ExtResource("42_jx8is"),
+&"slash_4": ExtResource("43_vx63k"),
+&"slash_5": ExtResource("44_lw0jh"),
+&"spell_cast": ExtResource("11_ha2mi"),
+&"strafe_left": ExtResource("45_ry8ed"),
+&"strafe_left_fast": ExtResource("46_au8ao"),
+&"strafe_right": ExtResource("47_w5j5w"),
+&"strafe_right_fast": ExtResource("48_cbf1i"),
+&"turn": ExtResource("49_4vfid"),
+&"turn_2": ExtResource("50_ljgr3"),
+&"walk_back": ExtResource("14_74r1k"),
+&"walk_forward": ExtResource("51_fr8ja")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_otmr2"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_smehm"]
+animation = &"fast_run"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_ur7pv"]
+min_space = 0.0
+blend_point_0/node = SubResource("AnimationNodeAnimation_otmr2")
+blend_point_0/pos = 0.0
+blend_point_0/name = &"idle"
+blend_point_1/node = SubResource("AnimationNodeAnimation_smehm")
+blend_point_1/pos = 1.0
+blend_point_1/name = &"fast_run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2a3c5"]
+animation = &"great_sword/draw_1"
+play_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_42b1b"]
+animation = &"great_sword/draw_2"
+play_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6e8lb"]
+animation = &"great_sword/draw_1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8svfe"]
+animation = &"great_sword/draw_2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ha2mi"]
+animation = &"great_sword/idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_apa73"]
+animation = &"great_sword/run_forward"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_74r1k"]
+animation = &"great_sword/draw_unsheathe"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mx1m4"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4gjji"]
+animation = &"run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u2ulf"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8svfe"]
+xfade_time = 0.2
+advance_expression = "currentAnim == WALK"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2a3c5"]
+xfade_time = 0.2
+advance_expression = "currentAnim == IDLE"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_42b1b"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "currentAnim == RUN"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_h7ic4"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "currentAnim == WALK and combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_au7lq"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6e8lb"]
+advance_mode = 2
+advance_expression = "currentAnim == IDLE and not combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2gdjj"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "currentAnim == WALK"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sc3ue"]
+xfade_time = 0.2
+advance_mode = 2
+advance_expression = "currentAnim == IDLE"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nubpm"]
+advance_mode = 2
+advance_expression = "currentAnim == RUN"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ua5cf"]
+advance_mode = 2
+advance_expression = "currentAnim == WALK"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4gjji"]
+xfade_time = 0.2
+switch_mode = 2
+advance_mode = 2
+advance_expression = "combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mx1m4"]
+advance_mode = 2
+advance_expression = "combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_lxlsd"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_51ujp"]
+advance_mode = 2
+advance_expression = "!combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_tk41t"]
+switch_mode = 2
+advance_mode = 2
+advance_expression = "!combat_mode"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u2ulf"]
+xfade_time = 0.7
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ua5cf"]
+states/End/position = Vector2(1445, 119)
+states/Start/position = Vector2(189, 207)
+states/great_sword_draw_1/node = SubResource("AnimationNodeAnimation_2a3c5")
+states/great_sword_draw_1/position = Vector2(944, 302)
+states/great_sword_draw_2/node = SubResource("AnimationNodeAnimation_42b1b")
+states/great_sword_draw_2/position = Vector2(944, 226)
+states/great_sword_draw_hand_up/node = SubResource("AnimationNodeAnimation_6e8lb")
+states/great_sword_draw_hand_up/position = Vector2(583, 302)
+states/great_sword_draw_take_out/node = SubResource("AnimationNodeAnimation_8svfe")
+states/great_sword_draw_take_out/position = Vector2(583, 226)
+states/great_sword_idle/node = SubResource("AnimationNodeAnimation_ha2mi")
+states/great_sword_idle/position = Vector2(503, 119)
+states/great_sword_run_forward/node = SubResource("AnimationNodeAnimation_apa73")
+states/great_sword_run_forward/position = Vector2(1121, 119)
+states/great_sword_walk_forward/node = SubResource("AnimationNodeAnimation_74r1k")
+states/great_sword_walk_forward/position = Vector2(818, 119)
+states/idle/node = SubResource("AnimationNodeAnimation_mx1m4")
+states/idle/position = Vector2(424, 420)
+states/run/node = SubResource("AnimationNodeAnimation_4gjji")
+states/run/position = Vector2(1042, 420)
+states/walk/node = SubResource("AnimationNodeAnimation_u2ulf")
+states/walk/position = Vector2(739, 420)
+transitions = ["great_sword_idle", "great_sword_walk_forward", SubResource("AnimationNodeStateMachineTransition_8svfe"), "great_sword_walk_forward", "great_sword_idle", SubResource("AnimationNodeStateMachineTransition_2a3c5"), "great_sword_walk_forward", "great_sword_run_forward", SubResource("AnimationNodeStateMachineTransition_42b1b"), "great_sword_run_forward", "great_sword_walk_forward", SubResource("AnimationNodeStateMachineTransition_h7ic4"), "Start", "great_sword_idle", SubResource("AnimationNodeStateMachineTransition_au7lq"), "Start", "idle", SubResource("AnimationNodeStateMachineTransition_6e8lb"), "idle", "walk", SubResource("AnimationNodeStateMachineTransition_2gdjj"), "walk", "idle", SubResource("AnimationNodeStateMachineTransition_sc3ue"), "walk", "run", SubResource("AnimationNodeStateMachineTransition_nubpm"), "run", "walk", SubResource("AnimationNodeStateMachineTransition_ua5cf"), "great_sword_draw_take_out", "great_sword_idle", SubResource("AnimationNodeStateMachineTransition_4gjji"), "idle", "great_sword_draw_hand_up", SubResource("AnimationNodeStateMachineTransition_mx1m4"), "great_sword_draw_hand_up", "great_sword_draw_take_out", SubResource("AnimationNodeStateMachineTransition_lxlsd"), "great_sword_idle", "great_sword_draw_2", SubResource("AnimationNodeStateMachineTransition_51ujp"), "great_sword_draw_2", "great_sword_draw_1", SubResource("AnimationNodeStateMachineTransition_tk41t"), "great_sword_draw_1", "idle", SubResource("AnimationNodeStateMachineTransition_u2ulf")]
+graph_offset = Vector2(-90, 91.58384)
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2gdjj"]
+animation = &"great_sword/idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sc3ue"]
+animation = &"great_sword/run_forward"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lxlsd"]
+animation = &"great_sword/walk_forward"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_ha2mi"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_5vs2b"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a7i4v"]
+animation = &"great_sword/walk_forward"
+use_custom_timeline = true
+timeline_length = 1.0
+stretch_time_scale = true
+start_offset = 0.0
+loop_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_b5l0c"]
+animation = &"great_sword/walk_back"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2a33p"]
+animation = &"great_sword/strafe_right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_reqs7"]
+animation = &"great_sword/strafe_left"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_2yjfb"]
+sync_mode = 1
+blend_point_0/node = SubResource("AnimationNodeAnimation_a7i4v")
+blend_point_0/pos = Vector2(0, 1)
+blend_point_0/name = &"great_sword_walk"
+blend_point_1/node = SubResource("AnimationNodeAnimation_b5l0c")
+blend_point_1/pos = Vector2(0, -1)
+blend_point_1/name = &"great_sword_walk_2"
+blend_point_2/node = SubResource("AnimationNodeAnimation_2a33p")
+blend_point_2/pos = Vector2(1, 0)
+blend_point_2/name = &"great_sword_strafe_2"
+blend_point_3/node = SubResource("AnimationNodeAnimation_reqs7")
+blend_point_3/pos = Vector2(-1, 0)
+blend_point_3/name = &"great_sword_strafe_left"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_37tqn"]
+graph_offset = Vector2(-452.2245, 403.70053)
+nodes/output/position = Vector2(800, 520)
+nodes/BlendSpace1D/node = SubResource("AnimationNodeBlendSpace1D_ur7pv")
+nodes/BlendSpace1D/position = Vector2(0, 0)
+nodes/walk/node = SubResource("AnimationNodeBlend2_5vs2b")
+nodes/walk/position = Vector2(-100, 420)
+nodes/walk_strafe/node = SubResource("AnimationNodeBlendSpace2D_2yjfb")
+nodes/walk_strafe/position = Vector2(-420, 160)
+"nodes/anim idle/node" = SubResource("AnimationNodeAnimation_2gdjj")
+"nodes/anim idle/position" = Vector2(-480, 420)
+"nodes/anim walk/node" = SubResource("AnimationNodeAnimation_lxlsd")
+"nodes/anim walk/position" = Vector2(-280, 620)
+nodes/run/node = SubResource("AnimationNodeBlend2_ha2mi")
+nodes/run/position = Vector2(220, 440)
+"nodes/anim run/node" = SubResource("AnimationNodeAnimation_sc3ue")
+"nodes/anim run/position" = Vector2(-20, 720)
+nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_ua5cf")
+nodes/StateMachine/position = Vector2(420, 560)
+node_connections = [&"output", 0, &"StateMachine", &"walk", 0, &"anim idle", &"walk", 1, &"anim walk", &"run", 0, &"walk", &"run", 1, &"anim run"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_w1hta"]
+radius = 0.26
+height = 1.7211914
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_w1hta"]
+radius = 15.911122
+
+[node name="Player" type="CharacterBody3D" unique_id=2141467341 groups=["player"]]
+collision_mask = 17
+script = ExtResource("1_g2els")
+
+[node name="StateMachine" type="Node3D" parent="." unique_id=1349442757 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_u2ulf")
+initial_state = NodePath("RunState")
+
+[node name="IdleState" type="Node3D" parent="StateMachine" unique_id=1934287703]
+unique_name_in_owner = true
+script = ExtResource("3_6e8lb")
+
+[node name="RunState" type="Node3D" parent="StateMachine" unique_id=278233933]
+unique_name_in_owner = true
+script = ExtResource("3_u2ulf")
+
+[node name="WalkState" type="Node3D" parent="StateMachine" unique_id=874743775]
+unique_name_in_owner = true
+
+[node name="JumpState" type="Node3D" parent="StateMachine" unique_id=495579343]
+unique_name_in_owner = true
+
+[node name="AttackState" type="Node3D" parent="StateMachine" unique_id=131863713]
+unique_name_in_owner = true
+
+[node name="IKController" type="Node3D" parent="." unique_id=384731194]
+unique_name_in_owner = true
+transform = Transform3D(0.99999976, 0, 0, 0, 0.9999999, 0, 0, 0, 0.99999976, 0, 0, 0)
+script = ExtResource("7_ur7pv")
+
+[node name="Armature" parent="." unique_id=2066479284 instance=ExtResource("6_u2ulf")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=308531043]
+root_node = NodePath("../Armature")
+root_motion_track = NodePath("Skeleton3D:mixamorig_Hips")
+libraries/ = SubResource("AnimationLibrary_tuyoq")
+libraries/great_sword = SubResource("AnimationLibrary_qmsq4")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=1836436068]
+root_node = NodePath("../Armature")
+tree_root = SubResource("AnimationNodeBlendTree_37tqn")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../AnimationPlayer")
+parameters/BlendSpace1D/blend_position = 0.0
+parameters/walk/blend_amount = 1.0
+parameters/walk_strafe/blend_position = Vector2(-0.9763975, -0.008547068)
+parameters/run/blend_amount = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1319395436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8674724, 0)
+shape = SubResource("CapsuleShape3D_w1hta")
+debug_color = Color(0.51928884, 0.50332975, 0.7432892, 0.41960785)
+
+[node name="DetectEnemy" type="Area3D" parent="." unique_id=644351822]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectEnemy" unique_id=1418734420]
+shape = SubResource("SphereShape3D_w1hta")
+
+[node name="PlayerParticleCollision" type="GPUParticlesCollisionSDF3D" parent="." unique_id=314230648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18023682, 1.4183159, 0.13079834)
+visible = false
+size = Vector3(2.3604736, 3.0301132, 2.2615967)
+
+[connection signal="animation_finished" from="AnimationTree" to="." method="_on_animation_tree_animation_finished"]
+[connection signal="body_entered" from="DetectEnemy" to="." method="_on_detect_enemy_body_entered"]
+[connection signal="body_exited" from="DetectEnemy" to="." method="_on_detect_enemy_body_exited"]
