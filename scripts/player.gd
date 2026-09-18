@@ -46,20 +46,11 @@ func _physics_process(delta: float) -> void:
 	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	direction = Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
 
-	if direction:
-		velocity.x = lerp(velocity.x, direction.x * speed, lerp_val)
-		velocity.z = lerp(velocity.z, direction.z * speed, lerp_val)
-		armature.rotation.y = lerp_angle(armature.rotation.y, atan2(-velocity.x, -velocity.z) + PI, lerp_val)
-	else:
-		velocity.x = lerp(velocity.x, 0.0, lerp_val)
-		velocity.z = lerp(velocity.z, 0.0, lerp_val)
-
 	_update_look_at_target()
 	move_and_slide()
 	
 
 ### SWORD ############################################
-
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("combat_mode"):

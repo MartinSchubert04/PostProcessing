@@ -11,16 +11,17 @@ func exit() -> void:
 	player.get_node("AnimationPlayer").stop()
 
 func physics_update(delta: float):
-
+	
+	player.velocity.x = lerp(player.velocity.x, 0.0, lerp_val)
+	player.velocity.z = lerp(player.velocity.z, 0.0, lerp_val)
+	
 	if player.input_dir != Vector2.ZERO:
 		transition.emit("WalkState")
 		return
 	
 	if Input.is_action_just_pressed("jump") and player.is_on_floor():
 		transition.emit("JumpState")
-		
-	player.lerp_val = lerp_val
-	player.speed = speed
+
 
 func update(delta: float) -> void:
 	pass

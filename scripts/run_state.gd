@@ -12,9 +12,11 @@ func exit() -> void:
 
 func physics_update(delta: float):
 	
-	player.lerp_val = lerp_val
-	player.speed = speed
-	
+	if player.direction:
+		player.velocity.x = lerp(player.velocity.x, player.direction.x * speed, lerp_val)
+		player.velocity.z = lerp(player.velocity.z, player.direction.z * speed, lerp_val)
+		player.armature.rotation.y = lerp_angle(player.armature.rotation.y, atan2(-player.velocity.x, -player.velocity.z) + PI, lerp_val)
+		
 	if player.input_dir == Vector2.ZERO:	
 		transition.emit("IdleState")
 		return 
@@ -25,6 +27,9 @@ func physics_update(delta: float):
 		
 	if Input.is_action_just_pressed("jump") and player.is_on_floor():
 		transition.emit("JumpState")
+		
+	if Input.is_action_just_pressed("player_attack"):
+		transition.emit("AttackState")
 
 func update(delta: float) -> void:
 	pass
