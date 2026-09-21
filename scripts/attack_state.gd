@@ -3,19 +3,19 @@ extends State
 var lerp_val = 0.09
 
 func enter():
-	player.get_node("AnimationPlayer").play("great_sword/slash")
-	if not player.get_node("AnimationPlayer").animation_finished.is_connected(_on_animation_finished):
-		player.get_node("AnimationPlayer").animation_finished.connect(_on_animation_finished)
-	player.sword_held.visible = true
-	player.sword_sheathed.visible = false
+	entity.get_node("AnimationPlayer").play("great_sword/slash")
+	if not entity.get_node("AnimationPlayer").animation_finished.is_connected(_on_animation_finished):
+		entity.get_node("AnimationPlayer").animation_finished.connect(_on_animation_finished)
+	entity.sword_held.visible = true
+	entity.sword_sheathed.visible = false
 	
 	
 func exit() -> void:
-	player.get_node("AnimationPlayer").stop()
+	entity.get_node("AnimationPlayer").stop()
 
 func physics_update(delta: float):
-	player.velocity.x = lerp(player.velocity.x, 0.0, lerp_val)
-	player.velocity.z = lerp(player.velocity.z, 0.0, lerp_val)
+	entity.velocity.x = lerp(entity.velocity.x, 0.0, lerp_val)
+	entity.velocity.z = lerp(entity.velocity.z, 0.0, lerp_val)
 
 
 func update(delta: float) -> void:

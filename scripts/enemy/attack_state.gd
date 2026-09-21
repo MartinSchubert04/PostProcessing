@@ -1,26 +1,16 @@
-# idle_state.gd
 extends State
 
-@export var speed = 0.0
-var lerp_val = 0.5
+var lerp_val = 0.09
 
 func enter():
-	entity.get_node("AnimationPlayer").play("idle")
-
+	entity.get_node("AnimationPlayer").play("great_sword/slash")
+	
 func exit() -> void:
 	entity.get_node("AnimationPlayer").stop()
 
 func physics_update(delta: float):
-	
 	entity.velocity.x = lerp(entity.velocity.x, 0.0, lerp_val)
 	entity.velocity.z = lerp(entity.velocity.z, 0.0, lerp_val)
-	
-	if entity.input_dir != Vector2.ZERO:
-		transition.emit("WalkState")
-		return
-	
-	if Input.is_action_just_pressed("jump") and entity.is_on_floor():
-		transition.emit("JumpState")
 
 
 func update(delta: float) -> void:
@@ -28,3 +18,6 @@ func update(delta: float) -> void:
 
 func handle_input(event: InputEvent) -> void:
 	pass
+
+func _on_animation_finished(anim_name: StringName):
+	transition.emit("IdleState")

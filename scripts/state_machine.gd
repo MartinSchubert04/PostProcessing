@@ -12,7 +12,7 @@ func _ready() -> void:
 			states[child.name.to_lower()] = child
 			child.transition.connect(_on_state_transition)
 			child.state_machine = self
-			child.player = owner
+			child.entity = owner
 
 	if initial_state:
 		current_state = initial_state

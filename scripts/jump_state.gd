@@ -4,18 +4,18 @@ extends State
 var lerp_val = 0.5
 
 func enter():
-	player.anim_tree.get("parameters/StateMachine/playback").travel("run")
+	entity.anim_tree.get("parameters/StateMachine/playback").travel("run")
 
 func exit() -> void:
-	player.anim_tree.get("parameters/StateMachine/playback").travel("run")
+	entity.anim_tree.get("parameters/StateMachine/playback").travel("run")
 
 func physics_update(delta: float):
-	player.lerp_val = lerp_val
-	player.velocity.y = jump_speed
+	entity.lerp_val = lerp_val
+	entity.velocity.y = jump_speed
 	
-	#if player.velocity.y <= 0 and not player.is_onfloor():
+	#if entity.velocity.y <= 0 and not entity.is_onfloor():
 		#transition.emit("FallState")
-	if player.is_on_floor():
+	if entity.is_on_floor():
 		_transition_on_land()
 	
 func update(delta: float) -> void:

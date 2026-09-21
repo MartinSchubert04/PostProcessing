@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://ddt7j6bea2qv2" path="res://scripts/enemy/follow_state.gd" id="4_7w3jn"]
 [ext_resource type="ArrayMesh" uid="uid://ctd7utj0hlc7f" path="res://assets/models/medieval_knight/meshes/obj_11.tres" id="4_wrm80"]
 [ext_resource type="ArrayMesh" uid="uid://4l3g37da0d71" path="res://assets/models/medieval_knight/meshes/obj_13.tres" id="5_6awcb"]
-[ext_resource type="Script" uid="uid://jx8ty0e6q715" path="res://scripts/enemy/attack_state.gd" id="5_uiwvf"]
 [ext_resource type="ArrayMesh" uid="uid://b1d012w3blut5" path="res://assets/models/medieval_knight/meshes/obj_15.tres" id="6_wjec0"]
 [ext_resource type="ArrayMesh" uid="uid://npxkdvwdcwy5" path="res://assets/models/medieval_knight/meshes/obj_17.tres" id="7_i4rgx"]
 [ext_resource type="ArrayMesh" uid="uid://dha6ujxxs7i85" path="res://assets/models/medieval_knight/meshes/obj_19.tres" id="8_2mchx"]
@@ -355,9 +354,8 @@ collision_layer = 16
 collision_mask = 3
 script = ExtResource("1_otmr2")
 
-[node name="StateMachine" type="Node3D" parent="." unique_id=192278075 node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node3D" parent="." unique_id=192278075]
 script = ExtResource("2_sm4rh")
-initial_state = NodePath("PatrolState")
 
 [node name="PatrolState" type="Node3D" parent="StateMachine" unique_id=1715517750]
 script = ExtResource("3_5lniq")
@@ -366,10 +364,8 @@ script = ExtResource("3_5lniq")
 script = ExtResource("4_7w3jn")
 
 [node name="AttackState" type="Node3D" parent="StateMachine" unique_id=962373627]
-script = ExtResource("5_uiwvf")
 
 [node name="Armature" type="Node3D" parent="." unique_id=1621671973]
-unique_name_in_owner = true
 transform = Transform3D(0.009955871, 0, 0, 0, 0.009955871, -2.2106474e-18, 0, 2.2106474e-18, 0.009955871, 0, 0, 0)
 
 [node name="Skeleton3D" type="Skeleton3D" parent="Armature" unique_id=628013309]
@@ -1237,12 +1233,12 @@ transform = Transform3D(0.02, 4.656613e-10, 9.313226e-10, 6.9849193e-10, -2.0954
 shape = SubResource("CapsuleShape3D_t3vcr")
 
 [node name="Physical Bone mixamorig_LeftUpLeg_047" type="PhysicalBone3D" parent="Armature/Skeleton3D/PhysicalBoneSimulator3D" unique_id=734370192 groups=["enemy"]]
-transform = Transform3D(-91.91825, 32.11201, -24.671848, -19.749056, 17.877432, 96.84636, 35.353306, 93.4776, -10.046274, 27.267069, 115.32293, 2.5776832)
+transform = Transform3D(-91.91825, 32.112007, -24.671848, -19.749056, 17.87743, 96.84636, 35.353306, 93.4776, -10.046272, 27.267069, 115.32293, 2.5776832)
 collision_layer = 32
 collision_mask = 0
 joint_type = 1
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5305376e-07, -9.178568e-07, 0.33543822)
-body_offset = Transform3D(100.443245, 7.6293945e-06, -5.7935715e-05, -6.175041e-05, 2.861023e-06, -100.44324, -7.6293945e-06, 100.44325, 1.9073486e-06, -7.6293945e-05, 33.692497, 9.1552734e-05)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.570349e-07, -9.3059634e-07, 0.33543822)
+body_offset = Transform3D(100.443245, 7.6293945e-06, -5.9127808e-05, -6.175041e-05, 4.7683716e-06, -100.44324, -7.6293945e-06, 100.44325, 5.722046e-06, -7.6293945e-05, 33.692497, 9.1552734e-05)
 bone_name = "mixamorig_LeftUpLeg_047"
 joint_constraints/bias = 0.3
 joint_constraints/damping = 1.0
@@ -1327,12 +1323,12 @@ transform = Transform3D(0.019999946, -1.7113052e-08, 4.4237822e-09, -6.0535967e-
 shape = SubResource("CapsuleShape3D_thsr5")
 
 [node name="Physical Bone mixamorig_RightFoot_054" type="PhysicalBone3D" parent="Armature/Skeleton3D/PhysicalBoneSimulator3D" unique_id=1929913884 groups=["enemy"]]
-transform = Transform3D(-92.214874, -11.86527, 38.00629, 9.833151, 86.122574, 50.745033, -38.582012, 50.30869, -77.90578, -8.122026, 9.30276, 1.8900832)
+transform = Transform3D(-92.214874, -11.86527, 38.006287, 9.833151, 86.122574, 50.745026, -38.582012, 50.30869, -77.90577, -8.122026, 9.30276, 1.8900832)
 collision_layer = 32
 collision_mask = 0
 joint_type = 1
-joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4993817e-06, 1.6228695e-06, 0.17296176)
-body_offset = Transform3D(100.44324, -1.9073486e-05, 3.8146973e-05, 1.7166138e-05, 1.5258789e-05, -100.44325, 1.335144e-05, 100.44325, 1.1444092e-05, 0.00014400482, 17.37284, -0.00016498566)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4960974e-06, 1.6163009e-06, 0.17296176)
+body_offset = Transform3D(100.44324, -1.9073486e-05, 3.6239624e-05, 1.7166138e-05, 1.5258789e-05, -100.44326, 1.335144e-05, 100.44325, 1.5258789e-05, 0.00014400482, 17.37284, -0.00016498566)
 bone_name = "mixamorig_RightFoot_054"
 joint_constraints/bias = 0.3
 joint_constraints/damping = 1.0

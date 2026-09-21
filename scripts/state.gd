@@ -1,9 +1,9 @@
 class_name State
-extends Node
+extends Node3D
 
 signal transition
 
-var player: CharacterBody3D  # referencia al owner
+var entity: CharacterBody3D
 var state_machine: StateMachine
 
 func enter() -> void:
