@@ -6,17 +6,12 @@ var current_state: State
 var states: Dictionary = {}
 
 func _ready() -> void:
-	# Give each child state a reference back to this machine and player
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.transition.connect(_on_state_transition)
 			child.state_machine = self
 			child.entity = owner
-
-	if initial_state:
-		current_state = initial_state
-		current_state.enter()
 
 func start():
 	if initial_state:

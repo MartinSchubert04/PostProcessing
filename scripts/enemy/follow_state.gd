@@ -3,13 +3,16 @@ extends State
 
 @export var speed = 7.0
 var lerp_val = 0.5
+var target_in_attack_range = false
+var target: Node3D
 
 func enter():
-	entity.get_node("AnimationPlayer").play("enemy/run")
+	print("Follow")
+	entity.anim_tree.get("parameters/playback").travel("Locomotion")
+	entity.move_blend = entity.BLEND_SPRINT
 	entity.get_node("DetectArea").get_child(0).shape.radius *=  2
 
 func exit() -> void:
-	entity.get_node("AnimationPlayer").stop()
 	entity.get_node("DetectArea").get_child(0).shape.radius /=  2
 	
 
@@ -32,6 +35,9 @@ func physics_update(delta: float):
 		entity.velocity.z = 0
 		transition.emit("PatrolState")
 	
+	if target:
+		_on_attack_area_body_entered(target)
+	
 
 func update(delta: float) -> void:
 	pass
@@ -40,8 +46,9 @@ func handle_input(event: InputEvent) -> void:
 	pass
 
 func _on_attack_area_body_entered(body: Node3D) -> void:
-	#transition.emit("AttackState")
-	pass
+	target = body
+	transition.emit("AttackState")
 
 func _on_attack_area_body_exited(body: Node3D) -> void:
-	pass
+	target = null
+	

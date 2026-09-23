@@ -5,6 +5,7 @@ signal hit
 @onready var armature = $Armature
 @onready var camera: Node3D = %Camera
 @onready var anim_tree = $AnimationTree
+@onready var anim_player = $AnimationPlayer
 @onready var hand_attachment: BoneAttachment3D = %SwordAttachment
 @onready var back_attachment: BoneAttachment3D = %BackAttachment
 @onready var sword_held: Node3D = %SwordAttachment/SwordHeld

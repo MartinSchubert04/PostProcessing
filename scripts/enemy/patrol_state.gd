@@ -1,14 +1,16 @@
-# run_state.gd
+# patrol_state.gd
 extends State
 
-@export var speed = 3.0
+@export var speed = 1.0
 var lerp_val = 0.5
 
 func enter():
-	entity.get_node("AnimationPlayer").play("enemy/run")
+	print("Patrol")
+	entity.anim_tree.get("parameters/playback").travel("Locomotion")
+	entity.move_blend = entity.BLEND_WALK
 
 func exit() -> void:
-	entity.get_node("AnimationPlayer").stop()
+	pass
 
 func physics_update(delta: float):
 	entity.follow_path.progress += speed * delta
