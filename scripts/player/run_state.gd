@@ -3,10 +3,14 @@ extends State
 
 @export var speed = 12.0
 var lerp_val = 0.5
+const AIR_ANIMS := ["Jump_Start", "Jump_Loop", "Jump_Land"]
 
 func enter():
-	print("Corro")
-	entity.playback.travel("Locomotion")
+	var current = entity.playback_current
+	if current in AIR_ANIMS:
+		entity.playback.start("Locomotion")
+	else:
+		entity.playback.travel("Locomotion")
 	entity.move_blend = entity.BLEND_SPRINT
 
 func exit() -> void:

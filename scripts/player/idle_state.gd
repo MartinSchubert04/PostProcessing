@@ -14,13 +14,11 @@ func exit() -> void:
 
 func physics_update(delta: float):
 	
+	var current = entity.playback_current
+	
 	entity.velocity.x = lerp(entity.velocity.x, 0.0, lerp_val)
 	entity.velocity.z = lerp(entity.velocity.z, 0.0, lerp_val)
 	
-	var current = entity.playback.get_current_node()
-	
-	if current == "Jump_Land":
-		return
 	
 	if not entity.is_on_floor():
 		transition.emit("FallState")
@@ -28,6 +26,9 @@ func physics_update(delta: float):
 	
 	if entity.input_dir != Vector2.ZERO:
 		transition.emit("RunState")
+		return
+		
+	if current == "Jump_Land":
 		return
 	
 	if Input.is_action_just_pressed("jump") and entity.is_on_floor():

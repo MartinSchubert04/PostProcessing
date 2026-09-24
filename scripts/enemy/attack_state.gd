@@ -33,7 +33,7 @@ func physics_update(delta: float):
 			_attacking = true
 		return
 
-	var current = entity.playback.get_current_node()
+	var current = entity.playback_current
 	if not _attack_started:
 		if current == ATTACK_NODE:
 			_attack_started = true

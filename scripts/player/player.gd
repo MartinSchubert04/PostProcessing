@@ -15,6 +15,7 @@ signal hit
 @onready var state_machine: StateMachine = $StateMachine
 
 @onready var playback = anim_tree.get("parameters/playback")
+var playback_current
 
 var direction: Vector3
 var input_dir: Vector2
@@ -34,7 +35,23 @@ const BLEND_IDLE := 0.0
 const BLEND_WALK := 0.5
 const BLEND_SPRINT := 1.0
 var move_blend := BLEND_IDLE
-var air_yaw := 0.0
+
+@export_group("Jump")
+@export var jump_height := 1.6
+@export var time_to_apex := 0.38
+@export var time_to_fall := 0.28      # menor que time_to_apex = cae más rápido de lo que sube
+@export var jump_cut_multiplier := 2.5 # gravedad extra si soltás el botón (altura variable)
+@export var max_fall_speed := 25.0
+@export var coyote_time := 0.12
+@export var jump_buffer_time := 0.12
+
+@onready var jump_velocity := 2.0 * jump_height / time_to_apex
+@onready var gravity_up := 2.0 * jump_height / (time_to_apex * time_to_apex)
+@onready var gravity_down := 2.0 * jump_height / (time_to_fall * time_to_fall)
+
+var coyote_timer := 0.0
+var jump_buffer_timer := 0.0
+
 
 func _ready() -> void:
 	sword_held.visible = combat_mode
@@ -44,11 +61,18 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+	playback_current = playback.get_current_node()
+	
+	if is_on_floor():
+		coyote_timer = coyote_time
 	else:
-		air_yaw = camera.rotation.y
+		coyote_timer -= delta
+		velocity.y = maxf(velocity.y - _current_gravity() * delta, -max_fall_speed)
+
+	if Input.is_action_just_pressed("jump"):
+		jump_buffer_timer = jump_buffer_time
+	else:
+		jump_buffer_timer -= delta
 	
 	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	direction = Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
@@ -97,5 +121,17 @@ func _update_look_at_target():
 	elif not best_target and IK_controller.look_target != null:
 		IK_controller.disable_look_at()
 
-func air_direction():
-	return Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
+### JUMP ############################################
+
+func _current_gravity() -> float:
+	if velocity.y > 0.0:
+		return gravity_up if Input.is_action_pressed("jump") else gravity_up * jump_cut_multiplier
+	return gravity_down
+
+func wants_jump() -> bool:
+	return jump_buffer_timer > 0.0 and coyote_timer > 0.0
+
+func consume_jump() -> void:
+	jump_buffer_timer = 0.0
+	coyote_timer = 0.0
+	velocity.y = jump_velocity

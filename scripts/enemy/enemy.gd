@@ -8,6 +8,7 @@ extends CharacterBody3D
 @onready var state_machine: StateMachine = $StateMachine
 
 @onready var playback = anim_tree.get("parameters/playback")
+var playback_current
 
 const MAX_SPEED = 2.0
 @export var blend_speed := 8.0
@@ -32,6 +33,8 @@ func _ready() -> void:
 	state_machine.start()
 
 func _physics_process(delta: float) -> void:
+	playback_current = playback.get_current_node()
+	
 	var current: float = anim_tree.get("parameters/Locomotion/blend_position")
 	anim_tree.set("parameters/Locomotion/blend_position", lerp(current, move_blend, delta * blend_speed))
 	move_and_slide()

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmlgytk48pvyr"
-path.s3tc="res://.godot/imported/T_Puglin_Emissive.png-fa0c36e43b51bd42f538fa237860128d.s3tc.ctex"
+path.s3tc="res://.godot/imported/T_Puglin_Emissive.png-ca149707041f2da5da023d3de48fd475.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Bestiary - Dungeon Monsters Kit/textures/T_Puglin_Emissive.png"
-dest_files=["res://.godot/imported/T_Puglin_Emissive.png-fa0c36e43b51bd42f538fa237860128d.s3tc.ctex"]
+source_file="res://assets/Bestiary - Dungeon Monsters Kit/Textures/T_Puglin_Emissive.png"
+dest_files=["res://.godot/imported/T_Puglin_Emissive.png-ca149707041f2da5da023d3de48fd475.s3tc.ctex"]
 
 [params]
 

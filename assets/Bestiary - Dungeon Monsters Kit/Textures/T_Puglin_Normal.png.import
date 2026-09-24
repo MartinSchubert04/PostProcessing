@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bs1y71orc3p5s"
-path.s3tc="res://.godot/imported/T_Puglin_Normal.png-e1bf7fd481af6bec5a1ed288c0b9a362.s3tc.ctex"
+path.s3tc="res://.godot/imported/T_Puglin_Normal.png-eddda4db024f0789faa867ac0518ec7a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Bestiary - Dungeon Monsters Kit/textures/T_Puglin_Normal.png"
-dest_files=["res://.godot/imported/T_Puglin_Normal.png-e1bf7fd481af6bec5a1ed288c0b9a362.s3tc.ctex"]
+source_file="res://assets/Bestiary - Dungeon Monsters Kit/Textures/T_Puglin_Normal.png"
+dest_files=["res://.godot/imported/T_Puglin_Normal.png-eddda4db024f0789faa867ac0518ec7a.s3tc.ctex"]
 
 [params]
 
