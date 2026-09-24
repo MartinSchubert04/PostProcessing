@@ -21,7 +21,10 @@ func physics_update(delta: float):
 		.move_toward(Vector2(target.x, target.z), air_accel * delta)
 	entity.velocity.x = h.x
 	entity.velocity.z = h.y
-	entity.armature.rotation.y = lerp_angle(entity.armature.rotation.y, atan2(-entity.velocity.x, -entity.velocity.z) + PI, lerp_val)
+	
+	var h_vel := Vector2(entity.velocity.x, entity.velocity.z)
+	if entity.direction and h_vel.length() > 0.5:
+		entity.armature.rotation.y = lerp_angle(entity.armature.rotation.y, atan2(-entity.velocity.x, -entity.velocity.z) + PI, lerp_val)
 
 	if entity.velocity.y <= 0.0:
 		transition.emit("FallState")

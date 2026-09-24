@@ -25,8 +25,9 @@ var lerp_val: float
 var combat_mode: bool = false
 
 var enemies_in_range: Array[Node3D] = []
-var fov_half_angle_degrees = 90.0
-var fov_threshold = cos(deg_to_rad(fov_half_angle_degrees)) 
+@export_range(0, 180) var fov_horizontal_deg := 90.0  
+@export_range(0, 90) var fov_vertical_deg := 35.0   
+@export var eye_height := 1.6
 
 enum { IDLE, WALK, WALK_STRAFE, RUN, JUMP, ATTACK, CROUCH_IDLE, CROUCH_WALK}
 var currentAnim = IDLE
@@ -105,17 +106,26 @@ func _on_detect_enemy_body_exited(body: Node3D) -> void:
 		IK_controller.disable_look_at()
 
 func _update_look_at_target():
-	var forward = armature.global_transform.basis.z
+	var eye := global_position + Vector3.UP * eye_height
 	var best_target: Node3D = null
-	var best_dot = fov_threshold
-	
+	var best_angle := INF
+
 	for enemy in enemies_in_range:
-		var to_enemy = global_position.direction_to(enemy.global_position)
-		var dot_result = to_enemy.dot(forward)
-		if dot_result > best_dot:
-			best_dot = dot_result
+		if not is_instance_valid(enemy):
+			continue
+		var to_enemy := enemy.global_position + Vector3.UP * eye_height - eye
+
+		var local = armature.global_transform.basis.inverse() * to_enemy
+		var yaw := rad_to_deg(atan2(local.x, local.z))
+		var pitch := rad_to_deg(atan2(local.y, Vector2(local.x, local.z).length()))
+
+		if absf(yaw) > fov_horizontal_deg or absf(pitch) > fov_vertical_deg:
+			continue
+
+		var angle := absf(yaw) + absf(pitch)
+		if angle < best_angle:
+			best_angle = angle
 			best_target = enemy
-	
 	if best_target and IK_controller.look_target != best_target:
 		IK_controller.set_look_at(best_target)
 	elif not best_target and IK_controller.look_target != null:
