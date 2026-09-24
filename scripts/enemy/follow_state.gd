@@ -3,12 +3,10 @@ extends State
 
 @export var speed = 7.0
 var lerp_val = 0.5
-var target_in_attack_range = false
 var target: Node3D
 
 func enter():
-	print("Follow")
-	entity.anim_tree.get("parameters/playback").travel("Locomotion")
+	entity.playback.travel("Locomotion")
 	entity.move_blend = entity.BLEND_SPRINT
 	entity.get_node("DetectArea").get_child(0).shape.radius *=  2
 
@@ -17,7 +15,11 @@ func exit() -> void:
 	
 
 func physics_update(delta: float):
-	if entity.target:
+	if entity.target_in_attack_range:
+		transition.emit("AttackState")
+		return
+	
+	if entity.target and global_position.distance_to(entity.target.global_position) > 1.0:
 		entity.direction = global_position.direction_to(entity.target.global_position)
 		entity.velocity.x = lerp(entity.velocity.x, entity.direction.x * speed, lerp_val)
 		entity.velocity.z = lerp(entity.velocity.z, entity.direction.z * speed, lerp_val)
@@ -34,10 +36,7 @@ func physics_update(delta: float):
 		entity.velocity.x = 0
 		entity.velocity.z = 0
 		transition.emit("PatrolState")
-	
-	if target:
-		_on_attack_area_body_entered(target)
-	
+
 
 func update(delta: float) -> void:
 	pass
@@ -46,9 +45,9 @@ func handle_input(event: InputEvent) -> void:
 	pass
 
 func _on_attack_area_body_entered(body: Node3D) -> void:
-	target = body
-	transition.emit("AttackState")
+	if body.is_in_group("player"):
+		entity.target_in_attack_range = true
 
 func _on_attack_area_body_exited(body: Node3D) -> void:
-	target = null
-	
+	if body.is_in_group("player"):
+		entity.target_in_attack_range = false

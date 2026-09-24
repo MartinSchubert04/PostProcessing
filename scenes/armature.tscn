@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://elx82mouthr1" path="res://assets/models/paladin_north/Paladin J Nordstrom_0.png" id="1_nk0wh"]
 [ext_resource type="Texture2D" uid="uid://bqosvrdn4lki0" path="res://assets/models/paladin_north/Paladin J Nordstrom_2.png" id="2_kqk2v"]
 [ext_resource type="PackedScene" uid="uid://b2o138f66are7" path="res://assets/models/dragon_slayer/dragon_slayer_bloodstained.glb" id="3_58o25"]
-[ext_resource type="Script" uid="uid://wrjewv5ye6nm" path="res://scripts/IKController.gd" id="4_kqk2v"]
+[ext_resource type="Script" uid="uid://wrjewv5ye6nm" path="res://scripts/player/IKController.gd" id="4_kqk2v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qcl0o"]
 resource_name = "Paladin_MAT"

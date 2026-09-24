@@ -5,18 +5,29 @@ extends State
 var lerp_val = 0.5
 
 func enter():
-	entity.get_node("AnimationPlayer").play("idle")
+	entity.playback.travel("Locomotion")
+	entity.move_blend = entity.BLEND_IDLE
+
 
 func exit() -> void:
-	entity.get_node("AnimationPlayer").stop()
+	pass
 
 func physics_update(delta: float):
 	
 	entity.velocity.x = lerp(entity.velocity.x, 0.0, lerp_val)
 	entity.velocity.z = lerp(entity.velocity.z, 0.0, lerp_val)
 	
+	var current = entity.playback.get_current_node()
+	
+	if current == "Jump_Land":
+		return
+	
+	if not entity.is_on_floor():
+		transition.emit("FallState")
+		return
+	
 	if entity.input_dir != Vector2.ZERO:
-		transition.emit("WalkState")
+		transition.emit("RunState")
 		return
 	
 	if Input.is_action_just_pressed("jump") and entity.is_on_floor():

@@ -4,7 +4,7 @@ signal hit
 
 @onready var armature = $Armature
 @onready var camera: Node3D = %Camera
-@onready var anim_tree = $AnimationTree
+@onready var anim_tree = %AnimationTree
 @onready var anim_player = $AnimationPlayer
 @onready var hand_attachment: BoneAttachment3D = %SwordAttachment
 @onready var back_attachment: BoneAttachment3D = %BackAttachment
@@ -13,6 +13,8 @@ signal hit
 @onready var sword_collision: CollisionObject3D = %SwordAreaCollision
 @onready var IK_controller: Node3D = %IKController
 @onready var state_machine: StateMachine = $StateMachine
+
+@onready var playback = anim_tree.get("parameters/playback")
 
 var direction: Vector3
 var input_dir: Vector2
@@ -27,10 +29,12 @@ var fov_threshold = cos(deg_to_rad(fov_half_angle_degrees))
 
 enum { IDLE, WALK, WALK_STRAFE, RUN, JUMP, ATTACK, CROUCH_IDLE, CROUCH_WALK}
 var currentAnim = IDLE
-@export var blend_speed = 15
-var run_val = 0
-var jump_val = 0
-var walk_val = 0
+@export var blend_speed := 8.0
+const BLEND_IDLE := 0.0
+const BLEND_WALK := 0.5
+const BLEND_SPRINT := 1.0
+var move_blend := BLEND_IDLE
+var air_yaw := 0.0
 
 func _ready() -> void:
 	sword_held.visible = combat_mode
@@ -43,10 +47,15 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+	else:
+		air_yaw = camera.rotation.y
 	
 	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	direction = Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
-
+		
+	var current: float = anim_tree.get("parameters/Locomotion/blend_position")
+	anim_tree.set("parameters/Locomotion/blend_position", lerp(current, move_blend, delta * blend_speed))
+	
 	_update_look_at_target()
 	move_and_slide()
 	
@@ -87,3 +96,6 @@ func _update_look_at_target():
 		IK_controller.set_look_at(best_target)
 	elif not best_target and IK_controller.look_target != null:
 		IK_controller.disable_look_at()
+
+func air_direction():
+	return Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()

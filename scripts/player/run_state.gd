@@ -1,16 +1,22 @@
 # run_state.gd
 extends State
 
-@export var speed = 20.0
+@export var speed = 12.0
 var lerp_val = 0.5
 
 func enter():
-	entity.get_node("AnimationPlayer").play("run")
+	print("Corro")
+	entity.playback.travel("Locomotion")
+	entity.move_blend = entity.BLEND_SPRINT
 
 func exit() -> void:
-	entity.get_node("AnimationPlayer").stop()
+	pass
 
 func physics_update(delta: float):
+	
+	if not entity.is_on_floor():
+		transition.emit("FallState")
+		return
 	
 	if entity.direction:
 		entity.velocity.x = lerp(entity.velocity.x, entity.direction.x * speed, lerp_val)
@@ -21,15 +27,17 @@ func physics_update(delta: float):
 		transition.emit("IdleState")
 		return 
 		
-	if Input.is_action_just_released("player_run"):
-		transition.emit("WalkState")
-		return
+	#if Input.is_action_just_released("player_run"):
+		#transition.emit("WalkState")
+		#return
 		
 	if Input.is_action_just_pressed("jump") and entity.is_on_floor():
 		transition.emit("JumpState")
+		return
 		
 	if Input.is_action_just_pressed("player_attack"):
 		transition.emit("AttackState")
+		return
 
 func update(delta: float) -> void:
 	pass

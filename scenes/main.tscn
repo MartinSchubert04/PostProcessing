@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dij4s2b6bq7s5"]
 
-[ext_resource type="Script" uid="uid://dd5otev8ise7u" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bph5wd52ddi87" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://dwl7spppi6f6v" path="res://scenes/camera.tscn" id="3_jyhfs"]
 [ext_resource type="FontFile" uid="uid://fp16rrlb2dm4" path="res://assets/fonts/Ticketing.ttf" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://81cttihocjqj" path="res://shaders/spatial/post_processing.gdshader" id="6_tefeu"]
 [ext_resource type="PackedScene" uid="uid://5cawf53j15qb" path="res://scenes/enemy.tscn" id="8_85g3d"]
-[ext_resource type="Script" uid="uid://dj7juvi1w3qw3" path="res://scripts/debugger.gd" id="8_tipki"]
+[ext_resource type="Script" uid="uid://dj7juvi1w3qw3" path="res://scripts/Debug/debugger.gd" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://dex452k0col2b" path="res://scenes/particles.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://djgaleohnrma" path="res://scenes/stage.tscn" id="10_choun"]
+[ext_resource type="PackedScene" uid="uid://dnwthk5uvyhki" path="res://scenes/stairs_wood.tscn" id="10_ya4ey"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_choun"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -46,8 +46,13 @@ _data = {
 }
 point_count = 4
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1hta"]
+albedo_color = Color(0.7042721, 0.5075619, 0.30582502, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37tqn"]
+albedo_color = Color(0.7058824, 0.5058824, 0.30588236, 1)
+
 [node name="Main" type="Node" unique_id=908243597]
-script = ExtResource("1_0wfyh")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=665216121]
 environment = SubResource("Environment_eb6dy")
@@ -115,10 +120,32 @@ curve = SubResource("Curve3D_85g3d")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D" unique_id=1367007107]
 unique_name_in_owner = true
-transform = Transform3D(0.8635394, 0, -0.50418735, 0, 0.99997103, 0, 0.5041799, 0, 0.8635521, -6.7466736, -0.00012207031, 4.548047)
+transform = Transform3D(0.8635392, 0, -0.5041873, 0, 0.99997103, 0, 0.5041798, 0, 0.86355203, -6.7466736, -0.00012207031, 4.548047)
 
 [node name="Enemy" parent="Path3D/PathFollow3D" unique_id=708765206 instance=ExtResource("8_85g3d")]
 transform = Transform3D(-0.96365505, 0, -0.2672442, 0, 1.0000157, 0, 0.2672452, 0, -0.96365124, -0.06229663, 0, -0.22501945)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=102215821]
+transform = Transform3D(0.81660235, -0.57720065, 0, 0.57720065, 0.81660235, 0, 0, 0, 1, 24.642204, -2.7618122, -10.311823)
+layers = 2
+use_collision = true
+collision_layer = 2
+collision_mask = 17
+size = Vector3(10, 10, 10)
+material = SubResource("StandardMaterial3D_w1hta")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=491749278]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 15.627986, -2.53231, -21.110506)
+layers = 2
+use_collision = true
+collision_layer = 2
+collision_mask = 17
+radius = 3.5
+radial_segments = 32
+material = SubResource("StandardMaterial3D_37tqn")
+
+[node name="stairs_wood" parent="." unique_id=750990033 instance=ExtResource("10_ya4ey")]
+transform = Transform3D(-0.4986511, 0, -0.03670257, 0, 0.5, 0, 0.03670257, 0, -0.4986511, 14.319853, 6.7055225e-08, 1.5367603)
 
 [connection signal="hit" from="Player" to="Path3D/PathFollow3D/Enemy" method="_on_player_hit"]
 

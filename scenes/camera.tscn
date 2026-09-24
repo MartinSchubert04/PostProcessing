@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dwl7spppi6f6v"]
 
-[ext_resource type="Script" uid="uid://c53usaw747x5x" path="res://scripts/camera.gd" id="1_cvpoc"]
+[ext_resource type="Script" uid="uid://c53usaw747x5x" path="res://scripts/player/camera.gd" id="1_cvpoc"]
 
 [node name="Camera" type="SpringArm3D" unique_id=1353829421]
 collision_mask = 2
