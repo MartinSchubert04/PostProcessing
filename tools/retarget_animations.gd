@@ -14,7 +14,7 @@ const LOOP_KEYWORDS := ["Idle", "Walk", "Jog", "Run", "Loop"]
 const NO_LOOP_KEYWORDS := ["_to_", "Stop", "Start"]
 
 # Paso 1: copia el retarget y reimporta. Paso 2: arma las AnimationLibrary.
-const STEP := 1
+const STEP := 2
 
 func _run() -> void:
 	if STEP == 1:

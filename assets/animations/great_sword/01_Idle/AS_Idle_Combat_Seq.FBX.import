@@ -42,7 +42,6 @@ materials/extract_path=""
 _subresources={
 "nodes": {
 "PATH:Skeleton3D": {
-"rest_pose/load_pose": 1,
 "rest_pose/selected_animation": "Unreal Take",
 "retarget/bone_map": Resource("uid://ticn1puvdr1i", "res://assets/animations/ue4_mannequin_bonemap.tres"),
 "retarget/bone_renamer/unique_node/skeleton_name": "Skeleton3D",
