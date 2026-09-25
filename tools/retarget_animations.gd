@@ -11,7 +11,7 @@ const PACKS := {
 const REFERENCE := "res://assets/animations/sword_shield/Attack_01_Seq.FBX"
 const LOOP_KEYWORDS := ["Idle", "Walk", "Jog", "Run", "Loop"]
 # Transiciones (Idle_to_Walk, Walk_Stop...) no deben loopear aunque digan "Walk"
-const NO_LOOP_KEYWORDS := ["_to_", "Stop", "Start"]
+const NO_LOOP_KEYWORDS := ["_to_", "Stop", "Start", "Attack", "Turn"]
 
 # Paso 1: copia el retarget y reimporta. Paso 2: arma las AnimationLibrary.
 const STEP := 2
@@ -64,6 +64,8 @@ func _apply_retarget() -> void:
 	print("Retarget aplicado a %d archivos" % to_reimport.size())
 
 func _should_loop(anim_name: String) -> bool:
+	if "_Loop" in anim_name:
+		return true
 	if NO_LOOP_KEYWORDS.any(func(k): return k in anim_name):
 		return false
 	return LOOP_KEYWORDS.any(func(k): return k in anim_name)

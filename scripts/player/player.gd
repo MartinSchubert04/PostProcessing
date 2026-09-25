@@ -83,7 +83,11 @@ func _physics_process(delta: float) -> void:
 	
 	_update_look_at_target()
 	move_and_slide()
-	
+
+### ANIMATIONS ############################################
+
+func anim_travel(state: String):
+	playback.trave(("Combat/" if combat_mode else "Normal/") + state)
 
 ### SWORD ############################################
 

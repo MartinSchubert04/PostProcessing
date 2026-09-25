@@ -2,7 +2,9 @@ extends Node3D
 
 # Compara la misma animación en: mannequin UE | referencia sin fix | Mixamo recién importado | player.tscn
 # En vivo: ←/→ cambian de animación, Espacio pausa, R reinicia.
-# Con --shots=<dir> guarda capturas y sale.
+# Con --shots=<dir> guarda capturas y sale. Con --lib=res://... usa otra AnimationLibrary,
+# --anims=a,b elige animaciones, --side los pone de perfil, --feet primer plano de los pies,
+# --ref=<escena> agrega el modelo original del pack con sus propias animaciones (referencia).
 
 const UE_FBX := "res://assets/animations/AS_Idle_Seq.FBX"
 const MIXAMO_FBX := "res://assets/models/paladin_north/Paladin J Nordstrom.fbx"
@@ -17,6 +19,7 @@ const GROUND_TRUTH_ANIM := "AS_Idle_Combat_Seq"
 
 var _players: Array[AnimationPlayer] = []
 var _gt_player: AnimationPlayer
+var _ref_player: AnimationPlayer # modelo original del pack con sus propias animaciones (--ref=)
 var _shots_dir := ""
 var _anim_list: PackedStringArray = []
 var _anim_index := 0
@@ -27,15 +30,27 @@ func _ready() -> void:
 		if arg.begins_with("--shots="):
 			_shots_dir = arg.trim_prefix("--shots=")
 
-	var lib: AnimationLibrary = load(LIBRARY)
+	var lib_path := LIBRARY
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--lib="):
+			lib_path = arg.trim_prefix("--lib=")
+	var lib := _load_library(lib_path)
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--anims="):
+			animations = arg.trim_prefix("--anims=").split(",")
 	if "--fresh-lib" in OS.get_cmdline_user_args():
 		lib = _fresh_library()
 	var live := _shots_dir == ""
 	_add_character(load(UE_FBX).instantiate(), -1.5 if live else -2.25, lib)
-	_add_character(load(MIXAMO_FBX).instantiate(), 0.0 if live else 0.75, lib)
+	var mixamo_path := MIXAMO_FBX
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--mixamo="):
+			mixamo_path = arg.trim_prefix("--mixamo=")
+	_add_character(load(mixamo_path).instantiate(), 0.0 if live else 0.75, lib)
 	_add_character(_player_armature(), 1.5 if live else 2.25, lib)
 	# La referencia solo sirve para las capturas (en vivo ya no coincide, el mannequin ahora usa fix)
-	if _shots_dir != "" and ResourceLoader.exists(GROUND_TRUTH):
+	var has_ref := Array(OS.get_cmdline_user_args()).any(func(x): return x.begins_with("--ref="))
+	if _shots_dir != "" and not has_ref and not "--feet" in OS.get_cmdline_user_args() and ResourceLoader.exists(GROUND_TRUTH):
 		# El FBX de animación no trae mesh: su animación va sobre el mannequin (mismo import, sin fix)
 		var src: Node = load(GROUND_TRUTH).instantiate()
 		var src_ap: AnimationPlayer = src.find_children("*", "AnimationPlayer", true, false)[0]
@@ -50,8 +65,27 @@ func _ready() -> void:
 		_gt_player.root_node = _gt_player.get_path_to(gt)
 		_gt_player.add_animation_library("", gt_lib)
 
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--ref="):
+			var ref: Node3D = load(arg.trim_prefix("--ref=")).instantiate()
+			ref.position.x = -0.75
+			add_child(ref)
+			_ref_player = ref.find_children("*", "AnimationPlayer", true, false)[0]
+
 	var cam := Camera3D.new()
 	cam.position = Vector3(0, 1.1, 4.5)
+	if "--side" in OS.get_cmdline_user_args() or "--feet" in OS.get_cmdline_user_args():
+		for ap in _players + ([_ref_player] if _ref_player else []):
+			ap.get_node(ap.root_node).rotation_degrees.y = 90
+	if "--side" in OS.get_cmdline_user_args():
+		cam.position = Vector3(0, 1.0, 7.5)
+		cam.fov = 32
+	if "--feet" in OS.get_cmdline_user_args():
+		# Primer plano de los pies, de perfil
+		for ap in _players:
+			ap.get_node(ap.root_node).rotation_degrees.y = 90
+		cam.position = Vector3(0, 0.3, 6.5)
+		cam.fov = 22
 	add_child(cam)
 	cam.current = true
 	var light := DirectionalLight3D.new()
@@ -101,6 +135,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _play_current() -> void:
 	var anim_name := _anim_list[_anim_index]
+	if _ref_player and _ref_player.has_animation(anim_name):
+		_ref_player.stop()
+		_ref_player.play(anim_name)
 	for ap in _players:
 		ap.stop()
 		ap.play("gs/" + anim_name)
@@ -111,6 +148,19 @@ UE mannequin  |  Mixamo (FBX)  |  player.tscn
 # Las animaciones que no loopean se repiten igual, sincronizadas
 func _on_finished(_anim: StringName) -> void:
 	_play_current()
+
+# Acepta una AnimationLibrary o una escena importada (toma las animaciones de su AnimationPlayer)
+func _load_library(path: String) -> AnimationLibrary:
+	var res := load(path)
+	if res is AnimationLibrary:
+		return res
+	var n: Node = (res as PackedScene).instantiate()
+	var ap: AnimationPlayer = n.find_children("*", "AnimationPlayer", true, false)[0]
+	var lib := AnimationLibrary.new()
+	for a in ap.get_animation_list():
+		lib.add_animation(a, ap.get_animation(a))
+	n.free()
+	return lib
 
 # Arma la librería en memoria desde los FBX tal como están importados ahora
 func _fresh_library() -> AnimationLibrary:
@@ -183,6 +233,10 @@ func _pose(anim_name: String, t: float) -> void:
 			_gt_player.stop()
 			for s in _gt_player.get_parent().find_children("*", "Skeleton3D", true, false):
 				s.reset_bone_poses()
+	if _ref_player and _ref_player.has_animation(anim_name):
+		_ref_player.play(anim_name)
+		_ref_player.seek(t, true)
+		_ref_player.pause()
 	for ap in _players:
 		ap.play("gs/" + anim_name)
 		ap.seek(t, true)
