@@ -1,11 +1,11 @@
 extends State
 
-@export var brake := 30.0
-var land_started := false
+@export var brake := 100.0
+var recover_at = 0.8
+var end_at = 0.9
 
 func enter():
-	land_started = false
-	entity.playback.travel("Jump_Land")
+	entity.anim_travel("Jump_Land")
 
 func exit() -> void:
 	pass
@@ -14,16 +14,13 @@ func physics_update(delta: float):
 	entity.velocity.x = move_toward(entity.velocity.x, 0.0, brake * delta)
 	entity.velocity.z = move_toward(entity.velocity.z, 0.0, brake * delta)
 	
-	var current = entity.playback_current
-	if current == "Jump_Land":
-		land_started = true
-	elif land_started:
-		if entity.input_dir == Vector2.ZERO:
-			transition.emit("IdleState")
-		else:
-			transition.emit("RunState")
-		
+	if entity.anim_state() != "Jump_Land":
+		return
 	
+	var progress = entity.anim_progress()
+	var moving = entity.input_dir != Vector2.ZERO
+	if progress >= end_at or (moving and progress >= recover_at):
+		transition.emit("LocomotionState" if moving else "IdleState")
 	
 func update(delta: float) -> void:
 	pass

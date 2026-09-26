@@ -9,7 +9,7 @@ const AIR_ANIMS = ["Jump_Loop", "Jump_Land"]
 
 func enter():
 	fall_start_y = entity.global_position.y
-	entity.playback.travel("Jump_Loop")
+	entity.anim_travel("Jump_Loop")
 
 func exit() -> void:
 	pass
@@ -23,20 +23,18 @@ func physics_update(delta: float):
 
 	if entity.wants_jump():  # coyote time
 		transition.emit("JumpState")
-		return
-	
-	var current = entity.playback_current
-	
+		return	
 	
 	if entity.is_on_floor():
 		var fall_height = fall_start_y - entity.global_position.y
 		
 		if fall_height >= hard_landing_height:
+			
 			transition.emit("LandState")
 		elif entity.input_dir == Vector2.ZERO:
 			transition.emit("IdleState")
 		else: 
-			transition.emit("RunState")
+			transition.emit("LocomotionState")
 		
 	
 func update(delta: float) -> void:

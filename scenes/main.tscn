@@ -59,7 +59,7 @@ environment = SubResource("Environment_eb6dy")
 
 [node name="Player" parent="." unique_id=2141467341 instance=ExtResource("1_o5qli")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09930718, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.008449674, -7)
 collision_mask = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1572766049]

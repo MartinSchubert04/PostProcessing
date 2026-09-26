@@ -1,22 +1,19 @@
 # run_state.gd
 extends State
 
-@export var speed = 12.0
+var speed = 0.0
 var lerp_val = 0.5
 const AIR_ANIMS := ["Jump_Start", "Jump_Loop", "Jump_Land"]
 
 func enter():
-	var current = entity.playback_current
-	if current in AIR_ANIMS:
-		entity.playback.start("Locomotion")
-	else:
-		entity.playback.travel("Locomotion")
-	entity.move_blend = entity.BLEND_SPRINT
+	entity.anim_travel("Locomotion")
 
 func exit() -> void:
 	pass
 
 func physics_update(delta: float):
+	
+	speed = entity.SPRINT_SPEED if Input.is_action_pressed("player_run") else entity.RUN_SPEED
 	
 	if not entity.is_on_floor():
 		transition.emit("FallState")
@@ -31,17 +28,12 @@ func physics_update(delta: float):
 		transition.emit("IdleState")
 		return 
 		
-	#if Input.is_action_just_released("player_run"):
-		#transition.emit("WalkState")
-		#return
-		
 	if Input.is_action_just_pressed("jump") and entity.is_on_floor():
 		transition.emit("JumpState")
 		return
 		
-	if Input.is_action_just_pressed("player_attack"):
+	if Input.is_action_just_pressed("player_attack") and entity.combat_mode:
 		transition.emit("AttackState")
-		return
 
 func update(delta: float) -> void:
 	pass

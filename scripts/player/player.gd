@@ -5,7 +5,6 @@ signal hit
 @onready var armature = $Armature
 @onready var camera: Node3D = %Camera
 @onready var anim_tree = %AnimationTree
-@onready var anim_player = $AnimationPlayer
 @onready var hand_attachment: BoneAttachment3D = %SwordAttachment
 @onready var back_attachment: BoneAttachment3D = %BackAttachment
 @onready var sword_held: Node3D = %SwordAttachment/SwordHeld
@@ -13,8 +12,8 @@ signal hit
 @onready var sword_collision: CollisionObject3D = %SwordAreaCollision
 @onready var IK_controller: Node3D = %IKController
 @onready var state_machine: StateMachine = $StateMachine
-
-@onready var playback = anim_tree.get("parameters/playback")
+@onready var skel: Skeleton3D = %Skeleton3D
+@onready var playback = anim_tree.get("parameters/Main/playback")
 var playback_current
 
 var direction: Vector3
@@ -32,6 +31,7 @@ var enemies_in_range: Array[Node3D] = []
 enum { IDLE, WALK, WALK_STRAFE, RUN, JUMP, ATTACK, CROUCH_IDLE, CROUCH_WALK}
 var currentAnim = IDLE
 @export var blend_speed := 8.0
+var locomotion_blend: Vector2
 const BLEND_IDLE := 0.0
 const BLEND_WALK := 0.5
 const BLEND_SPRINT := 1.0
@@ -40,8 +40,8 @@ var move_blend := BLEND_IDLE
 @export_group("Jump")
 @export var jump_height := 1.6
 @export var time_to_apex := 0.38
-@export var time_to_fall := 0.28      # menor que time_to_apex = cae más rápido de lo que sube
-@export var jump_cut_multiplier := 2.5 # gravedad extra si soltás el botón (altura variable)
+@export var time_to_fall := 0.28
+@export var jump_cut_multiplier := 2.5 
 @export var max_fall_speed := 25.0
 @export var coyote_time := 0.12
 @export var jump_buffer_time := 0.12
@@ -53,11 +53,16 @@ var move_blend := BLEND_IDLE
 var coyote_timer := 0.0
 var jump_buffer_timer := 0.0
 
+const WALK_SPEED := 1.65*2
+const RUN_SPEED := 4.23*2
+const SPRINT_SPEED := 7.76*2
+const RUN_ANIM_SPEED = 4.23
 
 func _ready() -> void:
+	skel.reset_bone_pose(skel.find_bone("Root"))
+	playback.start("Normal")
 	sword_held.visible = combat_mode
 	state_machine.start()
-	anim_tree.active = true
 	camera.set_following(self)
 
 
@@ -78,22 +83,63 @@ func _physics_process(delta: float) -> void:
 	input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	direction = Vector3(input_dir.x, 0, input_dir.y).rotated(Vector3.UP, camera.rotation.y).normalized()
 		
-	var current: float = anim_tree.get("parameters/Locomotion/blend_position")
-	anim_tree.set("parameters/Locomotion/blend_position", lerp(current, move_blend, delta * blend_speed))
-	
+	var local: Vector3 = armature.global_basis.inverse() * Vector3(velocity.x, 0, velocity.z)
+	var flat := Vector2(-local.x, local.z)
+	var target := flat.normalized() * speed_to_blend(flat.length()) if flat.length() > 0.05 else Vector2.ZERO
+	locomotion_blend = locomotion_blend.lerp(target, delta * blend_speed)
+	anim_tree.set("parameters/Main/Normal/Locomotion/blend_position", locomotion_blend)
+	anim_tree.set("parameters/Main/Combat/Locomotion/blend_position", locomotion_blend)
+
 	_update_look_at_target()
 	move_and_slide()
 
 ### ANIMATIONS ############################################
+func apply_root_motion(delta: float) -> void:
+	 # root_motion_local = true → el desplazamiento viene relativo a hacia dónde mira el armature
+	var motion: Vector3 = armature.quaternion * anim_tree.get_root_motion_position()
+	var h: Vector3 = global_basis * motion / delta
+	velocity.x = h.x
+	velocity.z = h.z    # velocity.y queda para la gravedad
+	armature.quaternion *= anim_tree.get_root_motion_rotation()
+
+func speed_to_blend(s: float) -> float:
+	if s <= WALK_SPEED:
+		return s / WALK_SPEED * 0.5
+	return 0.5 + clampf((s - WALK_SPEED) / (RUN_SPEED - WALK_SPEED), 0.0, 1.0) * 0.5
 
 func anim_travel(state: String):
-	playback.trave(("Combat/" if combat_mode else "Normal/") + state)
+	playback.travel(("Combat/" if combat_mode else "Normal/") + state)
 
-### SWORD ############################################
+func anim_state() -> StringName: # Current animation playing
+	var mode := "Combat" if combat_mode else "Normal"
+	return anim_tree.get("parameters/Main/%s/playback" % mode).get_current_node()
+
+func anim_progress() -> float:   # 0..1 de la animación del estado actual
+	var group: StringName = playback.get_current_node()
+	if group == &"":
+		return 0.0
+	var pb: AnimationNodeStateMachinePlayback = anim_tree.get("parameters/Main/%s/playback" % group)
+	var length := pb.get_current_length()
+	return pb.get_current_play_position() / length if length > 0.0 else 0.0
+
+func set_combat_mode(enabled: bool) -> void:
+	if enabled == combat_mode:
+		return
+	combat_mode = enabled
+	anim_tree.set("parameters/Equip/transition_request", "draw" if enabled else "sheathe")
+	anim_tree.set("parameters/EquipShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	anim_travel("Locomotion")
+	get_tree().create_timer(0.4).timeout.connect(_update_sword)   # ~40% del desenvaine
+
+func _update_sword() -> void:
+	sword_held.visible = combat_mode
+	sword_sheathed.visible = not combat_mode
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("combat_mode"):
-		combat_mode = not combat_mode
+	if event.is_action_pressed("combat_mode") and state_machine.current_state.name in ["IdleState", "LocomotionState"]:
+		set_combat_mode(not combat_mode)
+
+### SWORD ############################################
 
 func _on_sword_area_collision_area_entered(area: Area3D) -> void:
 	if area.is_in_group("enemy"):
