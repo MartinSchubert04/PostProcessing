@@ -14,28 +14,11 @@ signal hit
 @onready var state_machine: StateMachine = $StateMachine
 @onready var skel: Skeleton3D = %Skeleton3D
 @onready var playback = anim_tree.get("parameters/Main/playback")
-var playback_current
 
-var direction: Vector3
-var input_dir: Vector2
-var speed: float
-var lerp_val: float
-
-var combat_mode: bool = false
-
-var enemies_in_range: Array[Node3D] = []
+@export_group("LookAt")
 @export_range(0, 180) var fov_horizontal_deg := 90.0  
 @export_range(0, 90) var fov_vertical_deg := 35.0   
 @export var eye_height := 1.6
-
-enum { IDLE, WALK, WALK_STRAFE, RUN, JUMP, ATTACK, CROUCH_IDLE, CROUCH_WALK}
-var currentAnim = IDLE
-@export var blend_speed := 8.0
-var locomotion_blend: Vector2
-const BLEND_IDLE := 0.0
-const BLEND_WALK := 0.5
-const BLEND_SPRINT := 1.0
-var move_blend := BLEND_IDLE
 
 @export_group("Jump")
 @export var jump_height := 1.6
@@ -45,18 +28,55 @@ var move_blend := BLEND_IDLE
 @export var max_fall_speed := 25.0
 @export var coyote_time := 0.12
 @export var jump_buffer_time := 0.12
-
 @onready var jump_velocity := 2.0 * jump_height / time_to_apex
 @onready var gravity_up := 2.0 * jump_height / (time_to_apex * time_to_apex)
 @onready var gravity_down := 2.0 * jump_height / (time_to_fall * time_to_fall)
-
 var coyote_timer := 0.0
 var jump_buffer_timer := 0.0
+
+@export_group("Foot IK")
+@export var visual_for_IK: Node3D
+@export var ik_leg_left: TwoBoneIK3D
+@export var ik_leg_right: TwoBoneIK3D
+@export var ray_leg_left_front: RayCast3D
+@export var ray_leg_left_back: RayCast3D
+@export var ray_leg_right_front: RayCast3D
+@export var ray_leg_right_back: RayCast3D
+@export var target_leg_left: Marker3D
+@export var target_leg_right: Marker3D
+@export var ik_is_enabled: bool = false
+@export_range(0.0, 1.0, 0.05) var front_ray_weight: float = 0.5
+@export_range(-1, 1, 0.01) var pos_y_height_up: float = 0.11  
+@export_range(-1, 1, 0.01) var pos_y_height_flat: float = 0.11  
+@export_range(-1, 1, 0.01) var pos_y_height_down: float = 0.1  
+@export_range(-1, 1, 0.01) var slope_threshold: float = -0.02
+@export_range(0, 100, 1.0) var ik_lerp_speed: float = 10.0
+@export_range(0, 1, 0.01) var active_ik_influence: float = 1.0
+var inactive_ik_influence: float = 0.0
+var last_offset_l: float = 0.0
+var last_offset_r: float = 0.0
+
+@export_group("Animation")
+enum { IDLE, WALK, WALK_STRAFE, RUN, JUMP, ATTACK, CROUCH_IDLE, CROUCH_WALK}
+var currentAnim = IDLE
+@export var blend_speed := 8.0
+var locomotion_blend: Vector2
+const BLEND_IDLE := 0.0
+const BLEND_WALK := 0.5
+const BLEND_SPRINT := 1.0
+var move_blend := BLEND_IDLE
 
 const WALK_SPEED := 1.65*2
 const RUN_SPEED := 4.23*2
 const SPRINT_SPEED := 7.76*2
 const RUN_ANIM_SPEED = 4.23
+
+var direction: Vector3
+var input_dir: Vector2
+var speed: float
+var lerp_val: float
+var combat_mode: bool = false
+var enemies_in_range: Array[Node3D] = []
 
 func _ready() -> void:
 	skel.reset_bone_pose(skel.find_bone("Root"))
@@ -67,7 +87,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	playback_current = playback.get_current_node()
 	
 	if is_on_floor():
 		coyote_timer = coyote_time
@@ -91,6 +110,7 @@ func _physics_process(delta: float) -> void:
 	anim_tree.set("parameters/Main/Combat/Locomotion/blend_position", locomotion_blend)
 
 	_update_look_at_target()
+	handle_leg_ik(delta)
 	move_and_slide()
 
 ### ANIMATIONS ############################################
@@ -195,3 +215,71 @@ func consume_jump() -> void:
 	jump_buffer_timer = 0.0
 	coyote_timer = 0.0
 	velocity.y = jump_velocity
+
+
+### IK ############################################
+
+func handle_leg_ik(delta: float) -> void:
+	var should_ik_be_active: bool = is_on_floor() and (ik_is_enabled)
+
+	ik_leg_left.active = should_ik_be_active
+	ik_leg_right.active = should_ik_be_active
+
+	if should_ik_be_active:
+		last_offset_l = _process_leg_ik(ray_leg_left_front, ray_leg_left_back, target_leg_left, ik_leg_left, delta)
+		last_offset_r = _process_leg_ik(ray_leg_right_front, ray_leg_right_back, target_leg_right, ik_leg_right, delta)
+
+		choose_lowest_gap(delta)
+
+	else:
+		visual_for_IK.position.y = lerp(visual_for_IK.position.y, 0.0, 15.0 * delta)
+		ik_leg_left.influence = 0.0
+		ik_leg_right.influence = 0.0
+
+func choose_lowest_gap(delta: float) -> void:
+	var lowest_gap: float = min(last_offset_l, last_offset_r)
+
+	if lowest_gap < 0.0:
+		visual_for_IK.position.y = lerp(visual_for_IK.position.y, lowest_gap, 10.0 * delta)
+	else:
+		visual_for_IK.position.y = lerp(visual_for_IK.position.y, 0.0, 10.0 * delta)
+
+func _process_leg_ik(ray_f: RayCast3D, ray_b: RayCast3D, target_marker: Marker3D, ik: TwoBoneIK3D, delta: float) -> float:
+	var is_f_colliding: bool = ray_f.is_colliding()
+	var is_b_colliding: bool = ray_b.is_colliding()
+
+	if not (is_f_colliding or is_b_colliding):
+		ik.influence = lerpf(ik.influence, inactive_ik_influence, ik_lerp_speed * delta)
+		return 0.0
+
+	var avg_hit_y: float
+
+	if ray_f.is_colliding() and ray_b.is_colliding():
+		var w_f: float = front_ray_weight
+		var w_b: float = 1.0 - front_ray_weight
+
+		avg_hit_y = (ray_f.get_collision_point().y * w_f) + (ray_b.get_collision_point().y * w_b)
+	elif is_f_colliding:
+		avg_hit_y = ray_f.get_collision_point().y
+	else:
+		avg_hit_y = ray_b.get_collision_point().y
+
+	var height_diff: float = avg_hit_y - global_position.y
+
+	var current_pos_y: float = 0.0
+
+	if height_diff > slope_threshold:
+		# 1. Climbing up
+		current_pos_y = pos_y_height_up
+	elif height_diff < -slope_threshold:
+		# 2. Climbing down
+		current_pos_y = pos_y_height_down
+	else:
+		# 3. Walk on flat surface
+		current_pos_y = pos_y_height_flat
+
+	target_marker.global_position.y = avg_hit_y + current_pos_y
+
+	ik.influence = lerpf(ik.influence, active_ik_influence, ik_lerp_speed * delta)
+
+	return height_diff

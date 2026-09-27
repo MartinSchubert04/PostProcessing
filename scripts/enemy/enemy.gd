@@ -33,6 +33,10 @@ func _ready() -> void:
 	state_machine.start()
 
 func _physics_process(delta: float) -> void:
+	
+	if not is_on_floor():
+		velocity.y += get_gravity().y * delta
+	
 	playback_current = playback.get_current_node()
 	
 	var current: float = anim_tree.get("parameters/Locomotion/blend_position")

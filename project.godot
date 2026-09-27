@@ -106,6 +106,7 @@ player_attack={
 3d_physics/layer_7="enemy_hitbox"
 3d_physics/layer_8="interactable"
 3d_physics/layer_9="projectile"
+3d_physics/layer_10="visual_collision"
 
 [physics]
 
